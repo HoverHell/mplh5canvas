@@ -94,7 +94,7 @@ base_html = """
 </span>
 <table width="100%" border=0 cellspacing=2 cellpadding=2 style="margin-bottom: 0; position: absolute; left: 8px; top: 38px;">
 <tr>
-<td style="height: 50px; border-radius: 5px; border: 1px solid grey;">
+<td style="height: 50px; -moz-border-radius: 5px; border-radius: 5px; border: 1px solid grey;">
 <iframe id='thumbnails' style='border: none; height: 54px; padding-top: 3px;' width="100%">
  <!--thumbnails-->
 </iframe>
@@ -104,16 +104,16 @@ base_html = """
  <table cellspacing=5 border=0>
  <tr>
   <td>
-  <div onclick="set_layout(1);" style="cursor: pointer; border-radius: 5px; border: 1px solid grey; height: 22px; width: 40px;"></div>
+  <div onclick="set_layout(1);" style="cursor: pointer; -moz-border-radius: 5px; border-radius: 5px; border: 1px solid grey; height: 22px; width: 40px;"></div>
   </td>
   <td>
     <table onclick="set_layout(2);" cellpadding=1 cellspacing=0 border=0 style='cursor: pointer;'>
      <tr>
      <td>
-      <div style="border-radius: 5px; border: 1px solid grey; height: 20px; width: 20px;"></div>
+      <div style="-moz-border-radius: 5px; border-radius: 5px; border: 1px solid grey; height: 20px; width: 20px;"></div>
      </td>
      <td>
-      <div style="border-radius: 5px; border: 1px solid grey; height: 20px; width: 20px;"></div>
+      <div style="-moz-border-radius: 5px; border-radius: 5px; border: 1px solid grey; height: 20px; width: 20px;"></div>
      </td>
     </tr>
     </table>
@@ -122,15 +122,15 @@ base_html = """
    <table onclick="set_layout(4);" cellpadding=1 cellspacing=0 border=0 style='cursor: pointer;'>
      <tr>
      <td>
-        <div style="border-radius: 5px; border: 1px solid grey; height: 10px; width: 20px;"></div>
+        <div style="-moz-border-radius: 5px; border-radius: 5px; border: 1px solid grey; height: 10px; width: 20px;"></div>
      <td>
-        <div style="border-radius: 5px; border: 1px solid grey; height: 10px; width: 20px;"></div>
+        <div style="-moz-border-radius: 5px; border-radius: 5px; border: 1px solid grey; height: 10px; width: 20px;"></div>
      </tr>
      <tr>
      <td>
-        <div style="border-radius: 5px; border: 1px solid grey; height: 10px; width: 20px;"></div>
+        <div style="-moz-border-radius: 5px; border-radius: 5px; border: 1px solid grey; height: 10px; width: 20px;"></div>
      <td>
-        <div style="border-radius: 5px; border: 1px solid grey; height: 10px; width: 20px;"></div> 
+        <div style="-moz-border-radius: 5px; border-radius: 5px; border: 1px solid grey; height: 10px; width: 20px;"></div> 
     </tr>
     </table>
  </td>
@@ -147,12 +147,12 @@ base_html = """
 <div id='button_menu_0' style="border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; background: #336699; border: solid 1px grey;  top: -1px; position: relative; width: 640px; height: 20px;">
  <table width="100%" border=0 cellspacing=0 cellpadding=0>
   <tr width="100%">
-   <td width="24" style='padding-left: 2px; padding-right: 10px;'><img onclick='close_plot(0);' onmouseover='this.src=button_close_over.src' onmouseout='this.src=button_close.src' style='cursor: pointer;' id='cb' src=''/><script>cb.src=button_close.src</script>
+   <td width="24" style='padding-left: 2px; padding-right: 10px;'><img onclick='close_plot(0);' onmouseover='this.src=button_close_over.src' onmouseout='this.src=button_close.src' style='cursor: pointer;' id='cb' src=''/><script>document.getElementById('cb').src=document.getElementById('button_close').src</script>
    <td width="65%" onmousedown="clickMove(event,0);" style="cursor: move;"><span id="status_0" style='color: white;'>Disconnected</span>
    <td width="35%" onmousedown="clickMove(event,0);" style="cursor: move;"><span id='cursor_info' style='color: white;'>Cursor</span>
-   <td width="24" style="text-align: right; padding-left: 5px;"><img onclick='go_home(0);' ondragstart="return false;" onmouseover='this.src=button_home_over.src' onmouseout='this.src=button_home.src' onclick="maximise(0);" style="cursor: pointer;" id="hb" src="" /><script>hb.src = button_home.src</script>
-   <td width="24" style="text-align: right; padding-left: 5px; padding-right: 5px;"><img ondragstart="return false;" onmouseover='this.src=button_max_over.src' onmouseout='this.src=button_max.src' onclick="maximise(0);" style="cursor: pointer;" id="mb" src="" /> <script>mb.src = button_max.src</script>
-   <td width="24" style="text-align: right; padding-right: 5px;" onmousedown="clickSize(event,0);"><img border=0 onmouseover='this.src=button_resize_over.src' onmouseout='this.src=button_resize.src' ondragstart="return false;" style="cursor: se-resize;" id="rb" src="" /> <script>rb.src = button_resize.src</script>
+   <td width="24" style="text-align: right; padding-left: 5px;"><img onclick='go_home(0);' ondragstart="return false;" onmouseover='this.src=button_home_over.src' onmouseout='this.src=button_home.src' onclick="maximise(0);" style="cursor: pointer;" id="hb" src="" /><script>document.getElementById('hb').src = document.getElementById('button_home').src</script>
+   <td width="24" style="text-align: right; padding-left: 5px; padding-right: 5px;"><img ondragstart="return false;" onmouseover='this.src=button_max_over.src' onmouseout='this.src=button_max.src' onclick="maximise(0);" style="cursor: pointer;" id="mb" src="" /> <script>document.getElementById('mb').src = document.getElementById('button_max').src</script>
+   <td width="24" style="text-align: right; padding-right: 5px;" onmousedown="clickSize(event,0);"><img border=0 onmouseover='this.src=button_resize_over.src' onmouseout='this.src=button_resize.src' ondragstart="return false;" style="cursor: se-resize;" id="rb" src="" /> <script>document.getElementById('rb').src = document.getElementById('button_resize').src</script>
   </tr>
  </table>
 </div>
@@ -364,6 +364,7 @@ base_html = """
     ldiv[0] = new Array();
     ldiv[0][0] = document.getElementById('limit_div_0_0');
     ldiv[0][0].addEventListener('mousedown', function (e) {clickCanvas(e, 0, 0);});
+     // this style of event listener is an issue in Firefox 3.7. Will need to fix at some stage...
 
     var native_w = new Array();
     var native_h = new Array();
