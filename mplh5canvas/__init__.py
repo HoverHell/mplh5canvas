@@ -1,1 +1,1 @@
-# Matplotlib HTML 5 Canvas backend
+"""Matplotlib HTML5 Canvas backend."""

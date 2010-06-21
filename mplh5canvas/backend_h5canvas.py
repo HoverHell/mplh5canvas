@@ -1,8 +1,4 @@
-"""
-An HTML5 Canvas backend.
-
-Note that we intend to have some sort of very permissive BSD style license here.
-For now feel free to do whatever comes naturally...
+"""An HTML5 Canvas backend for matplotlib.
 
 Simon Ratcliffe (sratcliffe@ska.ac.za)
 Ludwig Schwardt (ludwig@ska.ac.za)
@@ -17,6 +13,7 @@ Redistributions in binary form must reproduce the above copyright notice, this l
 Neither the name of SKA South Africa nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 """
 
 from __future__ import division
@@ -26,19 +23,17 @@ import math
 import webbrowser
 import time
 import thread
-import threading
-import signal
 
 import numpy as np
 from matplotlib._pylab_helpers import Gcf
 from matplotlib.backend_bases import RendererBase, GraphicsContextBase, FigureManagerBase, FigureCanvasBase
 from matplotlib.figure import Figure
-from matplotlib.transforms import Bbox, Affine2D
+from matplotlib.transforms import Affine2D
 from matplotlib.path import Path
 from matplotlib.colors import colorConverter, rgb2hex
-from matplotlib.cbook import is_string_like, is_writable_file_like, maxdict
-from matplotlib.ft2font import FT2Font, KERNING_DEFAULT, LOAD_NO_HINTING
-from matplotlib.font_manager import findfont, FontProperties
+from matplotlib.cbook import maxdict
+from matplotlib.ft2font import FT2Font, LOAD_NO_HINTING
+from matplotlib.font_manager import findfont
 from matplotlib.mathtext import MathTextParser
 from matplotlib import _png
 
@@ -122,12 +117,12 @@ class H5Frame(object):
             self._content += '%s.%s(%s);\n' % (self._context_name, method_name, ','.join([self._convert_obj(obj) for obj in args]))
         return h5_method
 
-    def __setattr__(self, property, value):
-         # when frame properties are assigned to .<property> = <value>
-        if property.startswith('_'):
-            self.__dict__[property] = value
+    def __setattr__(self, prop, value):
+         # when frame properties are assigned to .<prop> = <value>
+        if prop.startswith('_'):
+            self.__dict__[prop] = value
             return
-        self._content += '%s.%s=%s;\n' % (self._context_name, property, self._convert_obj(value))
+        self._content += '%s.%s=%s;\n' % (self._context_name, prop, self._convert_obj(value))
 
     def moveTo(self, x, y):
         self._content += '%s.%s(%.2f,%.2f);\n' % (self._context_name, "moveTo", x, y)
@@ -217,7 +212,7 @@ class RendererH5Canvas(RendererBase):
         self.ctx.width = width
         self.ctx.height = height
         #self.ctx.textAlign = "center";
-        self.ctx.textBaseline = "alphabetic";
+        self.ctx.textBaseline = "alphabetic"
         self.flip = Affine2D().scale(1, -1).translate(0, height)
         self.mathtext_parser = MathTextParser('bitmap')
         self._path_time = 0
@@ -708,10 +703,6 @@ class FigureCanvasH5Canvas(FigureCanvasBase):
         if not _quiet: print "Stopping canvas web server..."
         self._server.shutdown()
         deregister_web_server(self._server_port)
-
-    def set_x_limit(self, x0, x1):
-        self._axes.set_xlim(x0, x1)
-        print "Setting x limits to",x0,",",x1
 
     def draw(self, ctx_override='c', *args, **kwargs):
         """
