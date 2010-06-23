@@ -43,11 +43,10 @@ thumb_inner = """
     var el = document.getElementById('thumbnail_<id>'); 
     var id = <id>;
     el.setAttribute('draggable', 'true');
-  
     el.addEventListener('dragstart', function (e) {
      e.dataTransfer.effectAllowed = 'copy'; // only dropEffect='copy' will be dropable
      e.dataTransfer.setData('Text', <id>); // required otherwise doesn't work
-    });
+    }, false);
     var c_t_<id> = document.getElementById('thumbnail_<id>').getContext('2d');
     c_t_<id>.scale(document.getElementById('thumbnail_<id>').width/<!--width-->, document.getElementById('thumbnail_<id>').height/<!--height-->);
     var thumbnail_content_<id> = "<!--thumbnail_content-->";
@@ -95,7 +94,7 @@ base_html = """
 <table width="100%" border=0 cellspacing=2 cellpadding=2 style="margin-bottom: 0; position: absolute; left: 8px; top: 38px;">
 <tr>
 <td style="height: 50px; -moz-border-radius: 5px; border-radius: 5px; border: 1px solid grey;">
-<iframe id='thumbnails' style='border: none; height: 54px; padding-top: 3px;' width="100%">
+<iframe name='thumbnails' id='thumbnails' style='border: none; height: 54px; padding-top: 3px;' width="100%">
  <!--thumbnails-->
 </iframe>
 </td>
@@ -144,7 +143,7 @@ base_html = """
 <span id='plot_canvas_0' style='position: absolute; top: 105px; left: 10px;'>
 <canvas ondragover="onDragOver(event);" ondrop="onDrop(event, 0);" style="border: 1px solid grey; position: absolute: top: 100px; left: 10px;" id="canvas_0" width="640" height="480" onmouseup="releaseCanvas(event,0);">
 </canvas>
-<div id='button_menu_0' style="border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; background: #336699; border: solid 1px grey;  top: -1px; position: relative; width: 640px; height: 20px;">
+<div id='button_menu_0' style="-moz-border-radius-bottomleft: 5px; border-bottom-left-radius: 5px; -moz-border-radius-bottomright: 5px; border-bottom-right-radius: 5px; background: #336699; border: solid 1px grey;  top: -1px; position: relative; width: 640px; height: 20px;">
  <table width="100%" border=0 cellspacing=0 cellpadding=0>
   <tr width="100%">
    <td width="24" style='padding-left: 2px; padding-right: 10px;'><img onclick='close_plot(0);' onmouseover='this.src=button_close_over.src' onmouseout='this.src=button_close.src' style='cursor: pointer;' id='cb' src=''/><script>document.getElementById('cb').src=document.getElementById('button_close').src</script>
@@ -262,7 +261,7 @@ base_html = """
      if (!(last_id in ldiv)) {
       ldiv[last_id] = new Array();
       ldiv[last_id][0] = document.getElementById('limit_div_0_' + last_id);
-      ldiv[last_id][0].addEventListener('mousedown', function (e) {wrapClickCanvas(e,this);});
+      ldiv[last_id][0].addEventListener('mousedown', function (e) {wrapClickCanvas(e,this);}, false);
      }
      zdiv[last_id] = document.getElementById('zoom_div_' + last_id);
     }
@@ -288,7 +287,7 @@ base_html = """
         ndiv.id = nid;
          // fix the id
         ndiv.removeEventListener('mousedown');
-        ndiv.addEventListener('mousedown', function (e) {wrapClickCanvas(e,this);});
+        ndiv.addEventListener('mousedown', function (e) {wrapClickCanvas(e,this);}, false);
         document.getElementById('plot_canvas_' + id).appendChild(ndiv);
         ldiv[id][i] = document.getElementById('limit_div_' + i + '_' + id); 
        } // we need a limit div for this axes
@@ -327,8 +326,8 @@ base_html = """
       document.getElementById('status_' + id).innerText = "Connecting to port " + port + "..."
       sockets[id].onmessage = function(e) { 
        document.getElementById('status_' + id).innerText = "Connected"
-       last_frames[id] = e.data;
-       draw_frame(id);
+       top.last_frames[id] = e.data;
+       top.draw_frame(id);
       } // end of function(e)
      //} // end of if id in sockets
     }
@@ -347,6 +346,8 @@ base_html = """
     function stop_plotting(id) { 
      free_frames[id] = 0;
      if (id in sockets) {
+      sockets[id].onmessage = function(e) {};
+       // reset the handler so that the buffer behind this socket does not polute new plots
       sockets[id].close();
       sockets.pop(id);
       last_frames[id] = "";
@@ -363,7 +364,7 @@ base_html = """
     var ldiv = new Array();
     ldiv[0] = new Array();
     ldiv[0][0] = document.getElementById('limit_div_0_0');
-    ldiv[0][0].addEventListener('mousedown', function (e) {clickCanvas(e, 0, 0);});
+    ldiv[0][0].addEventListener('mousedown', function (e) {clickCanvas(e, 0, 0);}, false);
      // this style of event listener is an issue in Firefox 3.7. Will need to fix at some stage...
 
     var native_w = new Array();
@@ -517,11 +518,12 @@ base_html = """
 
     function onDrop(e, id)
     {
+     if (e.preventDefault) { e.preventDefault(); }
+      // stop Firefox triggering a page change event
      top_e = e;
      var dt= e.dataTransfer;
      console.log(dt);
      var el_id = e.dataTransfer.getData('Text');
-     //alert("Connecting canvas " + id + " to Port: " + thumbnails.thumbnail_ports[el_id]);
      stop_plotting(id);
      start_plotting(id, thumbnails.thumbnail_ports[el_id]);
      return false;

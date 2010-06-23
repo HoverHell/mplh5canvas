@@ -119,6 +119,11 @@ class _StandaloneRequest(object):
         return self._request_handler.path
     uri = property(get_uri)
 
+    def get_method(self):
+        """Getter to mimic request.method."""
+        return self._request_handler.command
+    method = property(get_method)
+
     def get_headers_in(self):
         """Getter to mimic request.headers_in."""
         return self._request_handler.headers
@@ -249,7 +254,7 @@ class WebSocketRequestHandler(CGIHTTPServer.CGIHTTPRequestHandler):
         self._request = _StandaloneRequest(
                 self, False)
         self._handler = keywords.pop('handler') #WebSocketRequestHandler._handlers
-        self._handshaker = handshake.Handshaker(self._request, False)
+        self._handshaker = handshake.Handshaker(self._request, allowDraft75=True, strict=False)
         CGIHTTPServer.CGIHTTPRequestHandler.__init__(
                 self, *args, **keywords)
 
