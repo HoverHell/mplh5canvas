@@ -387,6 +387,9 @@ class RendererH5Canvas(RendererBase):
         font.set_size(prop.get_size_in_points(), self.dpi)
         return font
 
+    def draw_tex(self, gc, x, y, s, prop, angle, ismath=False):
+        print "Tex support is currently not implemented. Text element '",s,"' will not be displayed..."
+
     def draw_text(self, gc, x, y, s, prop, angle, ismath=False):
         if self._last_clip is not None or self._last_clip_path is not None: self._reset_clip()
         t = time.time()
