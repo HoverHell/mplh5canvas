@@ -293,9 +293,9 @@ base_html = """
        } // we need a limit div for this axes
        ldiv[id][i].style.display = "inline";
        ldiv[id][i].style.left = canvii[id].offsetLeft + ax_bb[i][0] + "px";
-       ldiv[id][i].style.top = canvii[id].offsetTop + ax_bb[i][3] + "px";
+       ldiv[id][i].style.top = canvii[id].offsetTop + ax_bb[i][1] + "px";
        ldiv[id][i].style.width = ax_bb[i][4] - ax_bb[i][0] + "px";
-       ldiv[id][i].style.height = ax_bb[i][1] - ax_bb[i][3] + "px";
+       ldiv[id][i].style.height = ax_bb[i][3] - ax_bb[i][1] + "px";
       }
      } catch (err) {canvas_errors.push("draw_frame(" + id + "): " + err);}
     }

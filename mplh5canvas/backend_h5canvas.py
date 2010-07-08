@@ -247,9 +247,6 @@ class RendererH5Canvas(RendererBase):
             # This happens because HTML Canvas defines (0, 0) as the *top left* of a pixel instead of the center,
             # which causes all integer-valued coordinates to fall exactly between pixels
             points += 0.5
-            # Ignore directives with negative coordinates (sanity check that gets rid of some drawing artifacts)
-            if (points < 0).any():
-                continue
             if code == Path.MOVETO:
                 ctx.moveTo(points[0], points[1])
                 current_point = (points[0], points[1])
@@ -298,7 +295,11 @@ class RendererH5Canvas(RendererBase):
             self._do_path_clip(ctx, clip)
             self._last_clip = clip
         if clip is None and clippath is None and (self._last_clip is not None or self._last_clip_path is not None): self._reset_clip()
-        self._path_to_h5(ctx, path, transform, None, dashes=gc.get_dashes())
+        if rgbFace is None and gc.get_hatch() is None:
+            figure_clip = (0, 0, self.width, self.height)
+        else:
+            figure_clip = None
+        self._path_to_h5(ctx, path, transform, figure_clip, dashes=gc.get_dashes())
         if rgbFace is not None:
             ctx.fill()
             ctx.fillStyle = '#000000'
@@ -726,7 +727,7 @@ class FigureCanvasH5Canvas(FigureCanvasBase):
             print "Path time: %s, Text time: %s, Marker time: %s, Sub time: %s" % (renderer._path_time, renderer._text_time, renderer._marker_time, renderer._sub_time)
         self.frame_count+=1
         for i,ax in enumerate(self.figure.axes):
-            corners = self.flip.transform(ax.bbox.corners())
+            corners = ax.bbox.corners()
             bb_str = ""
             for corner in corners: bb_str += str(corner[0]) + "," + str(corner[1]) + ","
             ctx.add_header("ax_bb[" + str(i) + "] = [" + bb_str[:-1] + "];")
