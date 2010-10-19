@@ -41,11 +41,14 @@ import simple_server
 import msgutil
 import management_server
 import uuid
+from mplh5canvas import MANAGEMENT_PORT
 
 _capstyle_d = {'projecting' : 'square', 'butt' : 'butt', 'round': 'round',}
  # mapping from matplotlib style line caps to H5 canvas
 
 BASE_PORT = 4566
+ # starting port to use for WebSocket connections for individial figures
+
 figure_number = 0
 
 _figure_ports = {}
@@ -55,7 +58,7 @@ _test = False
 _quiet = True
 _metrics = False
 
-h5m = management_server.H5Manager(8080)
+h5m = management_server.H5Manager(MANAGEMENT_PORT)
  # start a new management server...
 
 def new_web_port():
@@ -681,7 +684,6 @@ class FigureCanvasH5Canvas(FigureCanvasBase):
                 if y1 < Ymax: y1=Ymax
         self.figure.axes[ax].set_xlim((x0, x1))
         self.figure.axes[ax].set_ylim((y0, y1))
-        print "Set limits to ",(x0, x1),",",(y0, y1)
         self.draw()
 
     def deregister_request_handler(self, request):

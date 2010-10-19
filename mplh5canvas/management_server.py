@@ -40,7 +40,8 @@ class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     thumb_html = base_page.thumb_html
     thumb_inner = base_page.thumb_inner
     h5m = None
-    server_ip = "127.0.0.1"
+    server_ip = ""
+    server_port = ""
     def do_GET(self):
         match = re.compile("\/(\d*)$").match(self.path)
         ports = self.h5m._figures.keys()
@@ -50,7 +51,7 @@ class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             for port in ports:
                 canvas = self.h5m._figures[port]
             req_layout = (req_layout == '' and "" or "set_layout(" + str(req_layout) + ");")
-            self.wfile.write(self.base_html.replace('<!--requested_layout-->',req_layout).replace('<!--server_ip-->',self.server_ip))
+            self.wfile.write(self.base_html.replace('<!--requested_layout-->',req_layout).replace('<!--server_ip-->',self.server_ip).replace('<!--server_port-->',self.server_port))
         elif self.path == "/thumbs":
              # for each figure, create a thumbnail snippet and slipstream the js for the preview
             figure_count = 0
@@ -84,9 +85,9 @@ class H5Manager(object):
         self.ip = self._external_ip()
         self.port = port
         self._figures = {}
-        #RequestHandler.base_html = base_page.base_html
         RequestHandler.h5m = self
         RequestHandler.server_ip = self.ip
+        RequestHandler.server_port = str(self.port)
         self.url = "http://%s:%i" % (self.ip, self.port)
         self._request_handlers = {}
         print "Web server active. Browse to %s to view plots." % self.url

@@ -301,10 +301,10 @@ base_html = """
     }
 
     var last_manage = "";
-
+    var server_port = <!--server_port-->;
     function connect_manager() {
      if (management_socket) management_socket.close()
-     management_socket = new WebSocket('ws://<!--server_ip-->:8081/thumbs');
+     management_socket = new WebSocket('ws://<!--server_ip-->:' + (server_port+1) + '/thumbs');
      management_socket.onmessage = function(e) { 
       last_manage = e.data;
       eval(e.data);
@@ -316,7 +316,7 @@ base_html = """
     }
 
     function update_thumbnails() {
-     document.getElementById('thumbnails').src = "http://<!--server_ip-->:8080/thumbs";
+     document.getElementById('thumbnails').src = "http://<!--server_ip-->:" + server_port + "/thumbs";
     }
 
     function start_plotting(id, port) {
