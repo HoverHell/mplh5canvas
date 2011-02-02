@@ -87,7 +87,9 @@ base_html = """
 <img style='display: none;' id="button_resize_over" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAEAwAABAMBtJq7BgAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAOaSURBVDiNfZRLbBtVGIW/uTO2JxkTv52keTZOSBy1oRIVqEARgoqHuinqAlGhdIO6RIJFxQY2iAWLIlWwAAmxABGxqITEgk15BKEQqZQCah4iIS11EqdxjV8Zj+15eFhU2HFs8Utnc6X/3POfe/8jPXzhY5cD5dYdiqklKvktjOI2lUwKAH/vKFp4ADU4iH9gGknIB1tRDh5UcmlSi3OEp2YYeuYUocljBMeSABRurVLaWKKwdI3ijTl6ki8gtGhLv9RQ6LrsLn1HYfM3HnvzMvGZE22376+99T/YmruECI5Rj0wDUivh7s2ryGqdJy5eRvap/0vWsMYy2f36I8ySxV7XYQDEf2MWU79z8o33eXa0hzPDKo9GFIZV8NYdJLsz/qm6bB6fRZOK+Fzjvodu3SG18AVPvv4eHqEQ8QhOJ/xNFS5kKw47ZYsd3ebHzTLzKYPbRRPdrANgTLzI4+mrrDkJlGJqiWhimr6p4+A47JRqQJNQkiDWLRPrltFrZT79JUPFdpvjAXlPL3pgkJheRVRymwwePdEY426h2tGvxZTO2c/XqBkmwrSIKy7CtBq45xsg1O0iqrktYqNJhO0gbIfdQhW37WfCTF8XcY+LbFo8N6rxyZlRZNNqoOD2EH/AgyhnU0T7xxC2jbBtrKpFvmK1EWpemZ9fe4jzxyJ8dm6So33dLQrzNR/9AS9CckGynBbcztx/sZ/W81RMp4X00tkJvLJEWPMQUUDUrAZUnw+hxYbIp9YaHmZzBjduFZhfyTL74XWeemehhXR/TYZ9DYX9coU9x4vQoiMUN/9E2A6GXuP6aoavFlK8+sE17HKN9E6Jt+eWOxI+GFUbHo5oDjkDRFd0mOzfNxGOzcadPPWKyfJ6FqtcQ5gWT0+FefeVIx0JJ+JdDYXJGGR0B6EdSqLn0uTurJJOF1uMjvgEF55PYFTtjoSJPj/CtBgPOIzFvazdNVAkIaMdOc1fi18iQi8hSc0AKtUszr/1LQCRgMr4UIDxwR7GhwIkBgP0qAqqbTN7MsyVXzM4dbcZDkp2GdmokhWP4NKec53Ko0i8fCpEybX5fjkLNLcHOzqNJxwk6V8kKOVaRu+ERFTi4rk4Jdfhh5Vs45J9ASuh+xPYbj/J0DaWpVPUNUqGl4IuIwHRkOBQr5eJw36GR/xcuXGPnQOr2pbYVambFXecmFYlGnGZ1qAvqKCqPkqWh1xNYkO3+GZ+G6fevqP/AuWCyZZYcPwAAAAAAElFTkSuQmCC" />
 <img style='display: none;' id="button_home" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAEAwAABAMBtJq7BgAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAANvSURBVDiNjZVdTJtVGMd/79tauvLZFoaAfJQP040CUmYmA0TishCTGXXJIjEmxk2vjd5suzC7WmI0eqdRkwW3C40X6p2JJBKJjBgWt0ExE6G23cqg3Whrx1ffc87rRUs3GApP8r865/zO85Xn0bre/txkm1ktOj2+Op5uLsfvcfNElRsNiMYSTIcTTPy5xNhUGCHV9qdo24FN1S4+eauPkrUlrLEgcnkBmVwCwFJWicVVjahs5r6jkne+GGMuem9noK5pnB5sZ6i3ESZ/QCyFHrqlgZn9V7PaQNexuGvQDr3I17/O8+WPU6jcuaW66/h5gNOD7bzaaifz8yXkP8uYZpZhahaKn38NbPsw4lGKBoYo7D2BWk2zNvYNHZ1tOFwVTM4uAqBvhjnU28j6+HdII4NUKisTivpPYqv1UtR9HFtzJ2bOE6UU63dCLF88y0v+KpqqXVmg1aLz0aleMhPfIzIGQpKTRnHfCewe32bclPS9gmYvBGB9MUx69gZrsQXSl9/ngzeOYLXoWHt8dThSUVaiwS3JdT37Mo4n/dtKqGPbX5v1UEgMka1y6o+rlEcD9Pjq0DvqnajFIFKSV+nhFyhqfeaRltiEAljd1RjCzCszc4WOeie63+NiPbaQz1tJ1wCl/v6dYQ9Zqf857C2dGFJhSEV6foaO+jL0hpoKVuN3EBKKfUdwdw/uCgPQC+x4z3yGvaEVQ5ik/p7FU1ORrbKUJtI0WY0vEPr2U+Tayq5AUwqunz/Fxv0VDKEQuXzqwdtxHnM9jhQm6XCQ+O8TyI313YFKcTdwjWRoDkOYFNS0ELwdR78WWsZWUYVUio3VFWLTk/le280282dIhaPxADciSfSpcAJLZQNCQTI0T2ZD7AkGbKlyYXsvU+EE+nggguGuw1FVTyoawRCKvfkHhlAYQlF2sAvd0854IIIupOLMV1eoPHYSoXQMYbJXoiFMlKWAg+99yNlLEwipHkybN4/5GChOcPXCu+hWK1qugf/bTKRhcOjcx4ymnVz8KQDkhgPA8MgMo2knR4dHKGk8wEoy9b8q9ng5OjzCaNrJ8MhM/psdB+yF17tZ++s6d3/7hfjNAPfmbgLgbvZS4fVRfriffS1Pce7yBPMLy1v8fgQID1ZAW52TttpSmmr3AzB/K8b0rRTTkQTjgciOK+Bfa+a4GLtdYmQAAAAASUVORK5CYII=" />
 <img style='display: none;' id="button_home_over" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAEAwAABAMBtJq7BgAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAANtSURBVDiNjZXdT9tVGMc/59fS/aAvvJettALDAnMYFTTbVGTTGHWJibpsiTOaqIm36oWJd+4/WPRiaqL/gGYX3umlGDSZOnWQiGy8tJXCaPtrKRRafufFi0IHjAhP8tycPOdzvs9znvMcMfzel4Y9ZrSimJyEwjw6N4uTSSOAcKSLhsgAMhjDF46DsPZuxbt3YcNJ44x/zemuFp4djPFo91OciLYD8M+iw99phxupW0xN3aTc8xLabtq1X9QUGkNh8gfk3DjX3n6BM32xHVECTDVMeH1gWUymlvl0fI6V0ACOPw4IADyR4ZevADgT3zNoZrj+wUW62psxpsowwkPwuTfAV4+bWSBw7nX8T1+gPRTgrL9IvpijpARFQvdS3nDSqLmf+eyTt6jzWiitt5RZNI5ewhcbwBfrR7ubmC2lWmt0Ls3FugWWK4Kcp411fQTLaEX2p6+4+ubzeC0vUrHlguDIBeyewe28CY28hrD9AJSXEqxO/4UqZHnF3OZUcBFLgHclOclwJMTjxzvvKQNannmVhr6h3TcmLHzham21VLiyGt8q8/RSYNovsdzMDCP9UZSi5o2nzhM4efq+ltiGAnhbI7jS1DxaXiIaAEvnZnkodhSlNUprQsPnaBwa3R+2wxqHzmLHH8NVGldp/CWHniaBVXQWOR5uQyoIDj5J65kXD4QBWEdsBj7+HLv7JK40eIo5jrUGsIyhqs4Y1jNp5r+5htooHQg0SvLnlXeprJVwpUZKjW3bWC3hGHeWCihpWE3Mkrn5C6pSPhioNdnJPyjM38GVhs1QB6sVsHxH+7i97KC0prJeYnni11qvHWTb9XOVho4HSK15sHzhXm6lHaSGwvwMmxV5KBiw65bFg8MkVhSWHY4zV/YwfTfPykISV2oOpw9cqXGlxhONY7oeZiJRwEJYqPh5vp1eZr0scaXhsERXGqSoo+nyh3wxtoDSpvqWjd1MsfkEN+oMQ9kprl8aRewz63abQVpejl1+n7Gk5N9stTNq87AY7GOuvgETjtI//zv1hez/4vy9A/S88xFjSZfvfluore8YsIK73hhrVgf1Qx20ljIEMyk8+Qwmn0EAvo5OGmI9NAw+gS/+CFd/TJPKru06SOz3BVgCIgFNp9/Q3SiItAWx622KG4ZUyUNyRTGRyKP0/cX+DwdjpAeUBIzPAAAAAElFTkSuQmCC" />
+"""
 
+base_html_decoration = """
 <span id='title'>
 <h1>HTML 5 Canvas Matplotlib Backend</h1>
 </span>
@@ -138,17 +140,19 @@ base_html = """
 </td>
 </tr>
 </table>
+"""
 
+base_html_canvii = """
 <span id='plot_canvii'>
-<span id='plot_canvas_0' style='position: absolute; top: 105px; left: 10px;'>
-<canvas ondragover="onDragOver(event);" ondrop="onDrop(event, 0);" style="border: 1px solid grey; position: absolute: top: 100px; left: 10px;" id="canvas_0" width="640" height="480" onmouseup="releaseCanvas(event,0);">
+<span id='plot_canvas_0' style='position: <!--canvas_position-->; top: <!--canvas_top-->px; left: <!--canvas_left-->px;'>
+<canvas ondragover="onDragOver(event);" ondrop="onDrop(event, 0);" style="border: 1px solid grey;" id="canvas_0" width="640" height="480" onmouseup="releaseCanvas(event,0);">
 </canvas>
 <div id='button_menu_0' style="-moz-border-radius-bottomleft: 5px; border-bottom-left-radius: 5px; -moz-border-radius-bottomright: 5px; border-bottom-right-radius: 5px; background: #336699; border: solid 1px grey;  top: -1px; position: relative; width: 640px; height: 20px;">
  <table width="100%" border=0 cellspacing=0 cellpadding=0>
   <tr width="100%">
    <td width="24" style='padding-left: 2px; padding-right: 10px;'><img onclick='close_plot(0);' onmouseover='this.src=button_close_over.src' onmouseout='this.src=button_close.src' style='cursor: pointer;' id='cb' src=''/><script>document.getElementById('cb').src=document.getElementById('button_close').src</script>
    <td width="65%" onmousedown="clickMove(event,0);" style="cursor: move;"><span id="status_0" style='color: white;'>Disconnected</span>
-   <td width="35%" onmousedown="clickMove(event,0);" style="cursor: move;"><span id='cursor_info' style='color: white;'>Cursor</span>
+   <td width="35%" onmousedown="clickMove(event,0);" style="cursor: move;"><span onclick='change_cursor_info(0);' id='cursor_info_0' style='color: white;'>Cursor</span>
    <td width="24" style="text-align: right; padding-left: 5px;"><img onclick='go_home(0);' ondragstart="return false;" onmouseover='this.src=button_home_over.src' onmouseout='this.src=button_home.src' onclick="maximise(0);" style="cursor: pointer;" id="hb" src="" /><script>document.getElementById('hb').src = document.getElementById('button_home').src</script>
    <td width="24" style="text-align: right; padding-left: 5px; padding-right: 5px;"><img ondragstart="return false;" onmouseover='this.src=button_max_over.src' onmouseout='this.src=button_max.src' onclick="maximise(0);" style="cursor: pointer;" id="mb" src="" /> <script>document.getElementById('mb').src = document.getElementById('button_max').src</script>
    <td width="24" style="text-align: right; padding-right: 5px;" onmousedown="clickSize(event,0);"><img border=0 onmouseover='this.src=button_resize_over.src' onmouseout='this.src=button_resize.src' ondragstart="return false;" style="cursor: se-resize;" id="rb" src="" /> <script>document.getElementById('rb').src = document.getElementById('button_resize').src</script>
@@ -262,13 +266,30 @@ base_html = """
       ldiv[last_id] = new Array();
       ldiv[last_id][0] = document.getElementById('limit_div_0_' + last_id);
       ldiv[last_id][0].addEventListener('mousedown', function (e) {wrapClickCanvas(e,this);}, false);
+      frame_counter[last_id] = 0;
+      frame_start[last_id] = 0;
+      cursor_info[last_id] = 0;
      }
      zdiv[last_id] = document.getElementById('zoom_div_' + last_id);
     }
 
     var ax_bb = new Array();
+    cursor_info = new Array();
+    cursor_info[0] = 0;
+    frame_counter = new Array();
+    frame_counter[0] = 0;
+    frame_start = new Array();
+    frame_start[0] = 0;
+
+    function change_cursor_info(id) {
+     document.getElementById('cursor_info_' + id).innerText = "";
+     cursor_info[id] += 1;
+     if (cursor_info[id] > 1) cursor_info[id] = 0;
+    }
+
     function draw_frame(id) {
      try {
+      if (frame_counter[id] == 0) { frame_start[id] = new Date().getTime();}
       var c = contexts[id];
       //if (id in sockets) ldiv[id][0].style.display = "inline";
       //else ldiv[id][0].style.display = "none";
@@ -296,6 +317,12 @@ base_html = """
        ldiv[id][i].style.top = canvii[id].offsetTop + ax_bb[i][1] + "px";
        ldiv[id][i].style.width = ax_bb[i][4] - ax_bb[i][0] + "px";
        ldiv[id][i].style.height = ax_bb[i][3] - ax_bb[i][1] + "px";
+       frame_counter[id] += 1;
+       if (frame_counter[id] > 30) { 
+        fps = (frame_counter[0] / (new Date().getTime() - frame_start[id]) * 1000);
+        if (cursor_info[id] == 1) document.getElementById('cursor_info_' + id).innerText = "FPS:" + fps;
+        frame_counter[id] = 0;
+       }
       }
      } catch (err) {canvas_errors.push("draw_frame(" + id + "): " + err);}
     }
@@ -316,7 +343,9 @@ base_html = """
     }
 
     function update_thumbnails() {
-     document.getElementById('thumbnails').src = "http://<!--server_ip-->:" + server_port + "/thumbs";
+     try {
+      document.getElementById('thumbnails').src = "http://<!--server_ip-->:" + server_port + "/thumbs";
+     } catch (err) { canvas_errors.push("failed to issue update thumbnails"); }
     }
 
     function start_plotting(id, port) {
@@ -326,8 +355,8 @@ base_html = """
       document.getElementById('status_' + id).innerText = "Connecting to port " + port + "..."
       sockets[id].onmessage = function(e) { 
        document.getElementById('status_' + id).innerText = "Connected"
-       top.last_frames[id] = e.data;
-       top.draw_frame(id);
+       last_frames[id] = e.data;
+       draw_frame(id);
       } // end of function(e)
      //} // end of if id in sockets
     }
@@ -386,6 +415,14 @@ base_html = """
      var p = ref.id.split("_");
       // extract the figure and axes ids
      clickCanvas(e, p[3], p[2]);
+    }
+
+    function handle_user_event(arg_string, id) {
+     if (id in sockets) {
+      try {
+       sockets[id].send("<user_event args='" + arg_string + "'>");
+      } catch (err) {}
+     } 
     }
 
     function handle_click(e, id) {
@@ -563,7 +600,7 @@ base_html = """
      }
      else {
      }
-     document.getElementById('cursor_info').innerText = "Cursor at: " + e.pageX + "," + e.pageY;
+     if (cursor_info[id] == 0) document.getElementById('cursor_info_' + id).innerText = "Cursor at: " + e.pageX + "," + e.pageY;
      return false;
     }
     document.captureEvents(Event.MOUSEMOVE)

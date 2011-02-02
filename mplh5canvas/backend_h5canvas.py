@@ -325,7 +325,7 @@ class RendererH5Canvas(RendererBase):
                 self._set_style(gc, rgbFace)
                 clip = self._get_gc_clip_svg(gc)
                 ctx = self.ctx
-                self._path_to_h5(ctx, marker_path, marker_trans + Affine2D().translate(x, y), clip) 
+                self._path_to_h5(ctx, marker_path, marker_trans + Affine2D().translate(x, y), clip)
                 if rgbFace is not None:
                     ctx.fill()
                     ctx.fillStyle = '#000000'
@@ -574,6 +574,7 @@ class FigureCanvasH5Canvas(FigureCanvasBase):
         FigureCanvasBase.__init__(self, figure)
         #print "Init of Canvas called....",figure
         self.frame_count = 0
+        self._user_event = None
         self._server_port = new_web_port()
         self._request_handlers = {}
         self._frame = None
@@ -582,6 +583,7 @@ class FigureCanvasH5Canvas(FigureCanvasBase):
         self._home_y = {}
         self._zoomed = False
         self._first_frame = True
+        self._custom_content = None
         self._width, self._height = self.get_width_height()
         self.flip = Affine2D().scale(1, -1).translate(0, self._height)
         #print "Figure Width:",self._width,",Height:",self._height
@@ -612,6 +614,14 @@ class FigureCanvasH5Canvas(FigureCanvasBase):
     def show_browser(self):
         self.draw()
         webbrowser.open_new_tab(h5m.url + "/" + str(self.figure.number))
+
+    def handle_user_event(self, *args):
+        if self._user_event is not None:
+            try:
+                self._user_event(*args)
+            except Exception, e:
+                print "User event exception (",e,")"
+        else: print "User event called but no callback registered to handle it..."
 
     def handle_click(self, x, y, button):
         self.button_release_event(float(x),float(y),int(button))

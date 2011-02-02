@@ -37,11 +37,14 @@ except:
 
 class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     base_html = base_page.base_html
+    base_html_decoration = base_page.base_html_decoration
+    base_html_canvii = base_page.base_html_canvii
     thumb_html = base_page.thumb_html
     thumb_inner = base_page.thumb_inner
     h5m = None
     server_ip = ""
     server_port = ""
+    custom_content = None
     def do_GET(self):
         match = re.compile("\/(\d*)$").match(self.path)
         ports = self.h5m._figures.keys()
@@ -51,7 +54,28 @@ class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             for port in ports:
                 canvas = self.h5m._figures[port]
             req_layout = (req_layout == '' and "" or "set_layout(" + str(req_layout) + ");")
-            self.wfile.write(self.base_html.replace('<!--requested_layout-->',req_layout).replace('<!--server_ip-->',self.server_ip).replace('<!--server_port-->',self.server_port))
+            bh = self.base_html + self.base_html_decoration + self.base_html_canvii
+            self.wfile.write(bh.replace('<!--requested_layout-->',req_layout).replace('<!--server_ip-->',self.server_ip).replace('<!--server_port-->',self.server_port).replace('<!--canvas_top-->','105').replace('<!--canvas_left-->','10').replace('<!--canvas_position-->','absolute'))
+        elif self.path.startswith("/figure"):
+            try:
+                fig_no = int(self.path[7:]) - 1
+            except ValueError:
+                fig_no = 0
+            if fig_no < 0: fig_no = 0
+             # get the first figure by default
+            print "Figure number",fig_no
+            try:
+                port = ports[fig_no]
+                custom_content = self.h5m._figures[port]._custom_content
+                bh = self.base_html + self.base_html_canvii
+                req_layout = "plot_if_possible(" + str(ports[0])  + ");"
+                content = bh.replace('<!--requested_layout-->',req_layout).replace('<!--server_ip-->',self.server_ip).replace('<!--server_port-->',self.server_port).replace('<!--canvas_top-->','10').replace('<!--canvas_left-->','10').replace('<!--canvas_position-->','absolute')
+                if custom_content is not None:
+                    content = custom_content.replace("<!--figure-->", content)
+                self.wfile.write(content)
+
+            except IndexError:
+                self.wfile.write("Invalid Figure number (" + str(fig_no+1) + ") specified.")
         elif self.path == "/thumbs":
              # for each figure, create a thumbnail snippet and slipstream the js for the preview
             figure_count = 0

@@ -1,0 +1,66 @@
+<html>
+<head>
+ 
+</head>
+<body><div style="height: 500px;"><!--figure--></div>
+<br>
+<table border=0>
+<tr>
+ <td>
+  <select id='sensors_available' size=10 style="width:200px">
+   <!--sensor-list-->
+  </select>
+  <br>
+  &nbsp;
+ </td>
+ <td>
+   <button onclick="add()">--></button>
+ </td>
+ <td>
+  <select id='sensors_selected' size=10 style="width:200px">
+  </select>
+  <br>
+  <button onclick="remove()">Remove All</button>
+ </td>
+ <td>
+  <button onclick="plot()">Plot</button>
+</tr>
+<script>
+ var available = document.getElementById("sensors_available");
+ var selected = document.getElementById("sensors_selected");
+ function plot(){
+  var plot_str = ""
+  if (selected.length == 0) { alert("No sensors selected for plotting..."); return}
+  for (i=0; i<selected.length; i++) plot_str += selected.options[i].value + ",";
+  plot_str += "0"
+  handle_user_event(plot_str,0);
+ }
+ function add(){
+   var addIndex = available.selectedIndex;
+   if(addIndex < 0)
+      return;
+   selected.appendChild(available.options.item(addIndex));
+   available.selectedIndex = -1;
+   selected.selectedIndex = -1; 
+ }
+ function remove(){
+  for (i=selected.length-1; i>=0; i--) { available.appendChild(selected.item(i)); }
+  sortlist(available);
+  available.selectedIndex = -1;
+  selected.selectedIndex = -1; 
+  handle_user_event('',0);  
+ }
+ function sortlist(lb) {
+  arrTexts = new Array();
+  for(i=0; i<lb.length; i++)  {
+   arrTexts[i] = lb.options[i].text;
+  }
+  arrTexts.sort();
+  for(i=0; i<lb.length; i++)  {
+   lb.options[i].text = arrTexts[i];
+   lb.options[i].value = arrTexts[i];
+  }
+ }
+</script>
+</table>
+
