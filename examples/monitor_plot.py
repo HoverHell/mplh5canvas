@@ -10,7 +10,9 @@ import time
 
 sensor_list = ['enviro.wind_speed','enviro.wind_direction','enviro.ambient_temperature','enviro.humidity']
 
-def user_event(*args):
+def user_event(figure_id, *args):
+    f = figure(int(figure_id)+1)
+     # make the specified figure active for the rest of the calls in this method
     sensors = args[:-1]
     clf()
     xlabel('time (s)')
@@ -38,5 +40,6 @@ html_wrap_file = open("./examples/monitor_plot.html")
 cc = html_wrap_file.read().replace("<!--sensor-list-->",sensor_select)
 f.canvas._custom_content = cc
 html_wrap_file.close()
+f.canvas.draw()
 
 show(layout='figure1')

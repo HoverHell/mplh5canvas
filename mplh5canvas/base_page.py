@@ -420,7 +420,7 @@ base_html_canvii = """
     function handle_user_event(arg_string, id) {
      if (id in sockets) {
       try {
-       sockets[id].send("<user_event args='" + arg_string + "'>");
+       sockets[id].send("<user_event args='" + id + "," + arg_string + "'>");
       } catch (err) {}
      } 
     }

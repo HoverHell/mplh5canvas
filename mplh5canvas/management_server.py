@@ -63,12 +63,11 @@ class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
                 fig_no = 0
             if fig_no < 0: fig_no = 0
              # get the first figure by default
-            print "Figure number",fig_no
             try:
                 port = ports[fig_no]
                 custom_content = self.h5m._figures[port]._custom_content
                 bh = self.base_html + self.base_html_canvii
-                req_layout = "plot_if_possible(" + str(ports[0])  + ");"
+                req_layout = "plot_if_possible(" + str(port)  + ");"
                 content = bh.replace('<!--requested_layout-->',req_layout).replace('<!--server_ip-->',self.server_ip).replace('<!--server_port-->',self.server_port).replace('<!--canvas_top-->','10').replace('<!--canvas_left-->','10').replace('<!--canvas_position-->','absolute')
                 if custom_content is not None:
                     content = custom_content.replace("<!--figure-->", content)
