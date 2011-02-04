@@ -443,11 +443,12 @@ base_html_canvii = """
      if ((e.button == 0) && (e.shiftKey == false)) {
       top_e = e;
       if (id > -1) zoom_canvas_id = id;
+      var cnv = document.getElementById('plot_canvas_' + id);
       zdraw = axes;
       zdiv[id].style.width = 0;
       zdiv[id].style.height = 0;
-      zdiv[id].style.top = (e.pageY - document.getElementById('plot_canvas_' + id).offsetTop) + "px";
-      zdiv[id].style.left = (e.pageX - document.getElementById('plot_canvas_' + id).offsetLeft) + "px";
+      zdiv[id].style.top = (e.pageY - (cnv.offsetTop + cnv.offsetParent.offsetTop)) + "px";
+      zdiv[id].style.left = (e.pageX - (cnv.offsetLeft + cnv.offsetParent.offsetLeft)) + "px";
       zdiv[id].style.display = "inline";
        // position the start of the zoom reticule
      }
