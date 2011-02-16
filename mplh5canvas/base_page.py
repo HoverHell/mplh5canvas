@@ -287,6 +287,18 @@ base_html_canvii = """
      if (cursor_info[id] > 1) cursor_info[id] = 0;
     }
 
+    function exec_user_cmd(id, cmd_str) {
+     var ret_str = "";
+     try {
+      ret_str = eval(cmd_str);
+     } catch(err) { ret_str = "user command failed: " + err;}
+     if (id in sockets) {
+      try {
+       sockets[id].send("<user_cmd_ret args='" + ret_str + "'>");
+      } catch (err) { alert('error returning output of user cmd:' + err); }
+     }
+    }
+
     function draw_frame(id) {
      try {
       if (frame_counter[id] == 0) { frame_start[id] = new Date().getTime();}
@@ -355,8 +367,12 @@ base_html_canvii = """
       document.getElementById('status_' + id).innerText = "Connecting to port " + port + "..."
       sockets[id].onmessage = function(e) { 
        document.getElementById('status_' + id).innerText = "Connected"
-       last_frames[id] = e.data;
-       draw_frame(id);
+       if (e.data.indexOf("/*exec_user_cmd*/") == 0) {
+        exec_user_cmd(id, e.data);
+       } else {
+        last_frames[id] = e.data;
+        draw_frame(id);
+       }
       } // end of function(e)
      //} // end of if id in sockets
     }

@@ -575,6 +575,7 @@ class FigureCanvasH5Canvas(FigureCanvasBase):
         #print "Init of Canvas called....",figure
         self.frame_count = 0
         self._user_event = None
+        self._user_cmd_ret = None
         self._server_port = new_web_port()
         self._request_handlers = {}
         self._frame = None
@@ -614,6 +615,13 @@ class FigureCanvasH5Canvas(FigureCanvasBase):
     def show_browser(self):
         self.draw()
         webbrowser.open_new_tab(h5m.url + "/" + str(self.figure.number))
+
+    def handle_user_cmd_ret(self, *args):
+        if self._user_cmd_ret is not None:
+            try:
+                self._user_cmd_ret(*args)
+            except Exception, e:
+                print "User cmd ret exception (",e,")"
 
     def handle_user_event(self, *args):
         if self._user_event is not None:
@@ -764,11 +772,13 @@ class FigureCanvasH5Canvas(FigureCanvasBase):
             self._first_frame = False
         if _metrics: print "Overall draw took %s s, with %i clipcount" % ((time.time() - ts), renderer._clip_count)
 
+    def send_cmd(self, cmd):
+        """Send a string of javascript to be executed on the client side of each connected user."""
+        self.send_frame("/*exec_user_cmd*/ %s" % cmd)
+
     def send_frame(self, frame):
-        recipients = ""
         for r in self._request_handlers.keys():
             try:
-                recipients += str(r.connection.remote_addr[0]) + " "
                 msgutil.send_message(r, frame.decode('utf-8'))
             except AttributeError:
                  # connection has gone
@@ -779,11 +789,6 @@ class FigureCanvasH5Canvas(FigureCanvasBase):
     def show(self):
         print "Show called... Not implemented in this function..."
 
-    # You should provide a print_xxx function for every file format
-    # you can write.
-
-    # If the file type is not in the base set of filetypes,
-    # you should add it to the class-scope filetypes dictionary as follows:
     filetypes = {'js': 'HTML5 Canvas'}
 
     def print_js(self, filename, *args, **kwargs):
@@ -796,14 +801,6 @@ class FigureCanvasH5Canvas(FigureCanvasBase):
     def get_default_filetype(self):
         return 'js'
 
-    def print_foo(self, filename, *args, **kwargs):
-        """
-        Write out format foo.  The dpi, facecolor and edgecolor are restored
-        to their original values after this call, so you don't need to
-        save and restore them.
-        """
-        pass
-
 class FigureManagerH5Canvas(FigureManagerBase):
     """
     Wrap everything up into a window for the pylab interface
@@ -813,7 +810,6 @@ class FigureManagerH5Canvas(FigureManagerBase):
     def __init__(self, canvas, num):
         self.canvas = canvas
         FigureManagerBase.__init__(self, canvas, num)
-        #print "Called init on figure manager",canvas,num
 
     def destroy(self, *args):
         self.canvas._stop_server()
@@ -821,13 +817,6 @@ class FigureManagerH5Canvas(FigureManagerBase):
 
     def show(self):
         print "Show called for figure manager"
-
-########################################################################
-#
-# Now just provide the standard names that backend.__init__ is expecting
-#
-########################################################################
-
 
 FigureManager = FigureManagerH5Canvas
 
