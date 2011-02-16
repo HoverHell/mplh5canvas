@@ -30,6 +30,7 @@ import thread
 import sys
 import re
 import socket
+import time
 try:
     import netifaces
 except:
@@ -104,24 +105,35 @@ class H5Manager(object):
     port : integer
         The base port on which to serve the managers web interface
     """
-    def __init__(self, port):
+    def __init__(self, base_port, limit):
         self.ip = self._external_ip()
-        self.port = port
+         # find the next available port in multiples of 100 from base port
         self._figures = {}
+        for x in range(limit):
+            port_to_try = base_port + x*100
+            try:
+                self._server = BaseHTTPServer.HTTPServer(('', port_to_try), RequestHandler)
+                self._thread = thread.start_new_thread(self._server.serve_forever, ())
+                self._wsserver = simple_server.WebSocketServer(('', port_to_try+1), self.management_request, simple_server.WebSocketRequestHandler)
+                self._wsthread = thread.start_new_thread(self._wsserver.serve_forever, ())
+                break
+            except Exception, e:
+                if x == limit - 1:
+                    print "Tried to find an available port pair from %i to %i, but none seemed available. You can only spawn %i python mplh5 instances on this machine.\nThis limit can be changed in init.py." % (base_port, base_port + (x-1)*100, limit)
+                    sys.exit(1)
+                else:
+                    print "Failed to start management servers on ports (%i, %i). Trying another pair..." % (port_to_try, port_to_try+1)
+                    time.sleep(0.05)
+         # we have a port :)
+        self.port = port_to_try
         RequestHandler.h5m = self
         RequestHandler.server_ip = self.ip
         RequestHandler.server_port = str(self.port)
         self.url = "http://%s:%i" % (self.ip, self.port)
         self._request_handlers = {}
-        print "Web server active. Browse to %s to view plots." % self.url
-        try:
-            self._server = BaseHTTPServer.HTTPServer(('', self.port), RequestHandler)
-            self._thread = thread.start_new_thread(self._server.serve_forever, ())
-            self._wsserver = simple_server.WebSocketServer(('', self.port+1), self.management_request, simple_server.WebSocketRequestHandler)
-            self._wsthread = thread.start_new_thread(self._wsserver.serve_forever, ())
-        except Exception, e:
-            print "Failed to start management servers. (%s)" % str(e)
-            sys.exit(1)
+        print "===================================================================================="
+        print "Management interface active. Browse to %s to view plots." % self.url
+        print "===================================================================================="
 
     def _external_ip(self, preferred_ifaces=('eth0', 'en0')):
         """Return the external IPv4 address of this machine.

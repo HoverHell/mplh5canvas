@@ -41,29 +41,30 @@ import simple_server
 import msgutil
 import management_server
 import uuid
-from mplh5canvas import MANAGEMENT_PORT
+from mplh5canvas import MANAGEMENT_PORT_BASE, MANAGEMENT_LIMIT, FIGURE_LIMIT
 
 _capstyle_d = {'projecting' : 'square', 'butt' : 'butt', 'round': 'round',}
  # mapping from matplotlib style line caps to H5 canvas
 
-BASE_PORT = 4566
- # starting port to use for WebSocket connections for individial figures
-
 figure_number = 0
 
 _figure_ports = {}
+_figure_ports['count'] = 0
 #_request_handlers = {}
 _frame = ""
 _test = False
 _quiet = True
 _metrics = False
 
-h5m = management_server.H5Manager(MANAGEMENT_PORT)
+h5m = management_server.H5Manager(MANAGEMENT_PORT_BASE, MANAGEMENT_LIMIT)
  # start a new management server...
 
+BASE_PORT = h5m.port + 1
+ # get the base port to use for websocket connections. Each distinct management instance can handle 98 figures
+
 def new_web_port():
-    if _figure_ports.has_key('count'): _figure_ports['count'] += 1
-    else: _figure_ports['count'] = 1
+     # TODO: needs to handle reuse of port as well.
+    _figure_ports['count'] += 1
     return BASE_PORT + _figure_ports['count']
 
 def register_web_server(port, canvas):
@@ -571,6 +572,9 @@ class FigureCanvasH5Canvas(FigureCanvasBase):
     """
 
     def __init__(self, figure):
+        if _figure_ports['count'] >= FIGURE_LIMIT:
+            print "Figure limit of %i reached. Returning NULL figure" % FIGURE_LIMIT
+            return None
         FigureCanvasBase.__init__(self, figure)
         #print "Init of Canvas called....",figure
         self.frame_count = 0
