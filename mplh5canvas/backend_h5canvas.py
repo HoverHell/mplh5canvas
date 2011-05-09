@@ -361,9 +361,18 @@ class RendererH5Canvas(RendererBase):
         self._last_clip = None
         self._last_clip_path = None
 
-    def draw_image(self, x, y, im, bbox, clippath=None, clippath_trans=None):
+     #<1.0.0: def draw_image(self, x, y, im, bbox, clippath=None, clippath_trans=None):
+     #1.0.0 and up: def draw_image(self, gc, x, y, im, clippath=None):
+     #API for draw image changed between 0.99 and 1.0.0
+    def draw_image(self, *args, **kwargs):
+        x, y, im = args[:3]
+        try:
+            h,w = im.get_size_out()
+        except AttributeError:
+            x, y, im = args[1:4]
+            h,w = im.get_size_out()
+        clippath = (kwargs.has_key('clippath') and kwargs['clippath'] or None)
         if self._last_clip is not None or self._last_clip_path is not None: self._reset_clip()
-        h,w = im.get_size_out()
         if clippath is not None:
             self._path_to_h5(self.ctx,clippath, clippath_trans, stroke=False)
             self.ctx.save()
