@@ -134,6 +134,7 @@ class H5Manager(object):
         print "===================================================================================="
         print "Management interface active. Browse to %s to view plots." % self.url
         print "===================================================================================="
+        sys.stdout.flush()
 
     def _external_ip(self, preferred_ifaces=('eth0', 'en0')):
         """Return the external IPv4 address of this machine.

@@ -584,8 +584,16 @@ base_html_canvii = """
     }
 
     function zoom_in(id, axes) {
+     var atop = 0;
+     var aleft = 0;
+     if (document.getElementById("anchor_div") != null) {
+      an = document.getElementById("anchor_div");
+      atop = an.offsetTop;
+      aleft = an.offsetLeft;
+     }
+        
      var plc = document.getElementById("plot_canvas_" + id);
-     var zoom_coords = axes + "," + (startX - plc.offsetLeft) + "," + (canvii[id].height - (stopY - plc.offsetTop)) + "," + (stopX - plc.offsetLeft) + "," + (canvii[id].height - (startY - plc.offsetTop));
+     var zoom_coords = axes + "," + (startX - (plc.offsetLeft + aleft)) + "," + (canvii[id].height - (stopY - (plc.offsetTop + atop))) + "," + (stopX - (plc.offsetLeft + aleft)) + "," + (canvii[id].height - (startY - (plc.offsetTop + atop)));
      sockets[id].send("<zoom args='" + zoom_coords + "'>");
      startX=stopX=startY=stopY=0;
      zdiv[id].style.width="0px";
