@@ -519,7 +519,7 @@ def draw_if_interactive():
     """
     #print "In interactive..."
 
-def show(block=True, layout=''):
+def show(block=True, layout='', open_plot=True):
     """
     This show is typically called via pyplot.show.
     In general usage a script will have a sequence of figure creation followed by a pyplot.show which
@@ -531,7 +531,7 @@ def show(block=True, layout=''):
     Gcf.get_active().canvas.draw()
      # update the current figure
      # open the browser with the current active figure shown...
-    if not _test:
+    if not _test and open_plot:
         try:
             webbrowser.open_new_tab(h5m.url + "/" + str(layout))
         except:
