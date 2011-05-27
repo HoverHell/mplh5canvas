@@ -13,14 +13,35 @@ The current base system requirements prior to installation are:
 * Python 2.5 or newer (2.4 should also be OK, but has not been tested)
 * `Matplotlib`_ 0.99.1.1 or newer
 
-The web browser must support Canvas and WebSockets (see
-http://caniuse.com/#feat=websockets for current support). The target browser is
-Chrome 9.0+, while Safari 5.0+ is also supported. Opera 11.0+ and Firefox 4.0+
-support WebSocket too, but it is disabled by default. It can be enabled by
-browsing to the ``about:config`` page in Firefox and the ``opera:config`` page
-in Opera, respectively. There is currently no support for Internet Explorer.
+The web browser you use to display the plots must support Canvas and WebSockets
+(see http://caniuse.com/#feat=websockets for a summary of current WebSocket
+support). The status quo for the main browsers in May 2011 is:
 
-The code now supports both draft-75 and draft-76 websockets and so should be
+* **Chrome 9.0+** works out of the box and is the target browser
+
+* **Safari 5.0+** works out of the box
+
+* **Firefox 4.0+** works after unblocking WebSocket support:
+
+    - Browse to the ``about:config`` preferences page and promise to be careful
+    - Type ``websocket`` in the filter to find the right option
+    - Double-click on ``network.websocket.override-security-block`` to set it to ``true``
+
+* **Opera 11.0+** works after unblocking WebSocket support:
+
+    - Browse to the Preference Editor at the ``opera:config`` page
+    - Type ``websocket`` in the "Quick find" search field to zoom in on the
+      right option ("Enable WebSockets" under User Prefs)
+    - Check the tickbox and click on the Save button
+
+* **Internet Explorer** is not supported
+
+Both Firefox and Opera currently support WebSockets, but `block it by default`_.
+This is likely to change in the near future, and in the meantime WebSockets
+remain a simple and powerful way to obtain persistent connections across a wide
+variety of platforms given the limited available developer resources.
+
+The code now supports both draft-75 and draft-76 WebSockets and so should be
 reasonably future proof (until they change the standard again).
 
 Netifaces
@@ -93,6 +114,7 @@ of PNGs.
 
 .. _pywebsocket: http://code.google.com/p/pywebsocket/
 .. _Matplotlib: http://matplotlib.sourceforge.net/
+.. _block it by default: http://hacks.mozilla.org/2010/12/websockets-disabled-in-firefox-4/
 .. _netifaces: http://alastairs-place.net/netifaces/
 .. _PyPI: http://pypi.python.org/pypi/mplh5canvas
 .. _virtualenv: http://pypi.python.org/pypi/virtualenv
