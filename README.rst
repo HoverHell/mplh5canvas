@@ -9,6 +9,9 @@ has no installation dependencies, is easy and fast to animate, and retains
 compatibility with current matplotlib usage scenarios.
 
 Installation instructions can be found below or on the project's `Wiki`_ page.
+The short answer::
+
+  easy_install mplh5canvas
 
 Features
 --------
