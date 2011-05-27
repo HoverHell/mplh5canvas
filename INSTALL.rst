@@ -13,12 +13,12 @@ The current base system requirements prior to installation are:
 * Python 2.5 or newer (2.4 should also be OK, but has not been tested)
 * `Matplotlib`_ 0.99.1.1 or newer
 
-The web browser must support Canvas and WebSockets (see `this page`_ for current
-support). The target browser is Chrome 9.0+, while Safari 5.0+ is also supported.
-Opera 11.0+ and Firefox 4.0+ support WebSocket too, but it is disabled by default.
-It can be enabled by browsing to the ``about:config`` page in Firefox and the
-``opera:config`` page in Opera, respectively. There is currently no support for
-Internet Explorer.
+The web browser must support Canvas and WebSockets (see
+http://caniuse.com/#feat=websockets for current support). The target browser is
+Chrome 9.0+, while Safari 5.0+ is also supported. Opera 11.0+ and Firefox 4.0+
+support WebSocket too, but it is disabled by default. It can be enabled by
+browsing to the ``about:config`` page in Firefox and the ``opera:config`` page
+in Opera, respectively. There is currently no support for Internet Explorer.
 
 The code now supports both draft-75 and draft-76 websockets and so should be
 reasonably future proof (until they change the standard again).
@@ -93,7 +93,6 @@ of PNGs.
 
 .. _pywebsocket: http://code.google.com/p/pywebsocket/
 .. _Matplotlib: http://matplotlib.sourceforge.net/
-.. _this page: http://caniuse.com/#feat=websockets
 .. _netifaces: http://alastairs-place.net/netifaces/
 .. _PyPI: http://pypi.python.org/pypi/mplh5canvas
 .. _virtualenv: http://pypi.python.org/pypi/virtualenv

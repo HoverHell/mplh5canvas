@@ -8,7 +8,7 @@ Our main goal is to have a backend that is consistent across multiple platforms,
 has no installation dependencies, is easy and fast to animate, and retains
 compatibility with current matplotlib usage scenarios.
 
-Installation instructions can be found on the project's `Wiki`_ page.
+Installation instructions can be found below or on the project's `Wiki`_ page.
 
 Features
 --------
@@ -24,6 +24,11 @@ Features
 - Allows proper remote access to plots
 - Allows multiple concurrent access to plots
 - Thumbnail window allows quick cycling between plots on a single page
+
+Screenshot
+----------
+
+.. image:: http://mplh5canvas.googlecode.com/files/screenshot.png
 
 .. _WebSocket: http://en.wikipedia.org/wiki/WebSockets
 .. _Canvas: http://en.wikipedia.org/wiki/Canvas_element
