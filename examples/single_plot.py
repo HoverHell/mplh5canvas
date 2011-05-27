@@ -1,12 +1,11 @@
 #!/usr/bin/python
+"""Simple static plot, mostly for testing zooming..."""
 
 import matplotlib
 matplotlib.use('module://mplh5canvas.backend_h5canvas')
 from pylab import *
 import time
 
-"""Simple static plot, mostly for testing zooming...
-"""
 
 t = arange(0, 100, 1)
 s = sin(2*pi*t/10) * 10

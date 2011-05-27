@@ -1,13 +1,15 @@
 #!/usr/bin/python
+"""Testbed for the animation functionality of the backend.
+
+It basically produces an long series of frames that get animated on the client
+browser side.
+
+"""
 
 import matplotlib
 matplotlib.use('module://mplh5canvas.backend_h5canvas')
 from pylab import *
 import time
-
-"""This script serves as a testbed for the animatable functionality of the backend.
-It basically produces an long series of frames that get animated on the client browser side.
-"""
 
 def refresh_data(ax):
     t = arange(0.0 + count, 2.0 + count, 0.01)

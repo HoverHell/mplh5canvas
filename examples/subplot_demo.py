@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+"""Trying out subplots."""
+
 import matplotlib
 matplotlib.use('module://mplh5canvas.backend_h5canvas')
 from pylab import *

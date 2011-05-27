@@ -1,13 +1,11 @@
 #!/usr/bin/python
+"""Plots of two different sizes!"""
 
 import matplotlib
 matplotlib.use('module://mplh5canvas.backend_h5canvas')
 from pylab import *
 import time
 
-"""
-Plots of two different sizes !
-"""
 t = arange(0.0, 2.0, 0.01)
 s = sin(2*pi*t)
 f = figure(figsize=(10,6))

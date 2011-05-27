@@ -1,5 +1,4 @@
 #!/usr/bin/python
-
 """Used for testing image show."""
 
 import matplotlib

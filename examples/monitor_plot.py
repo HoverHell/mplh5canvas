@@ -1,12 +1,10 @@
 #!/usr/bin/python
+"""Plot embedded in HTML wrapper with custom user events..."""
 
 import matplotlib
 matplotlib.use('module://mplh5canvas.backend_h5canvas')
 from pylab import *
 import time
-
-"""Plot embedded in HTML wrapper with custom user events...
-"""
 
 sensor_list = ['enviro.wind_speed','enviro.wind_direction','enviro.ambient_temperature','enviro.humidity']
 
