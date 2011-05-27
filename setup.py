@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 from setuptools import setup, find_packages
-from matplotlib import __version__
+from distutils.version import LooseVersion
+from matplotlib import __version__ as mpl_version
 import sys
 import os.path
 
-if tuple([int(x) for x in __version__.split(".")[:3]]) < (0, 99, 1):
-    print "The HTML5 Canvas Backend requires matplotlib 0.99.1.1 or newer. Your version (%s) appears older than this. Unable to continue..." % __version__
+if LooseVersion(mpl_version) < LooseVersion("0.99.1.1"):
+    print "The HTML5 Canvas Backend requires matplotlib 0.99.1.1 or newer. " \
+          "Your version (%s) appears older than this. Unable to continue..." % (mpl_version,)
     sys.exit(0)
 
 here = os.path.abspath(os.path.dirname(__file__))
