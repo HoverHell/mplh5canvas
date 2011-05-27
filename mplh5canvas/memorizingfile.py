@@ -65,10 +65,10 @@ class MemorizingFile(object):
             return object.__getattribute__(self, name)
         return self._file.__getattribute__(name)
 
-    def readline(self):
+    def readline(self, size=None):
         """Override file.readline and memorize the line read."""
 
-        line = self._file.readline()
+        line = self._file.readline(size=size)
         if line and len(self._memorized_lines) < self._max_memorized_lines:
             self._memorized_lines.append(line)
         return line
