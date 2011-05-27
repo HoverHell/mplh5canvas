@@ -29,6 +29,7 @@ Screenshot
 ----------
 
 .. image:: http://mplh5canvas.googlecode.com/files/screenshot.png
+   :height: 600px
 
 .. _WebSocket: http://en.wikipedia.org/wiki/WebSockets
 .. _Canvas: http://en.wikipedia.org/wiki/Canvas_element

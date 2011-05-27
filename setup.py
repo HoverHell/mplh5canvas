@@ -12,29 +12,23 @@ here = os.path.abspath(os.path.dirname(__file__))
 README = open(os.path.join(here, 'README.rst')).read()
 INSTALL = open(os.path.join(here, 'INSTALL.rst')).read()
 
-VERSION = "trunk"
-DESCRIPTION = "A matplotlib backend based on HTML5 Canvas."
-LONG_DESCRIPTION = README + "\n\n" + INSTALL
-CLASSIFIERS = [
-    "Environment :: Console",
-    "Intended Audience :: Developers",
-    "Intended Audience :: End Users/Desktop",
-    "License :: OSI Approved :: BSD License",
-    "Operating System :: OS Independent",
-    "Programming Language :: Python :: 2",
-    "Topic :: Software Development :: Libraries :: Python Modules",
-]
-
 setup (
     name="mplh5canvas",
-    version=VERSION,
-    description=DESCRIPTION,
-    long_description=LONG_DESCRIPTION,
-    classifiers=CLASSIFIERS,
+    version="0.5",
     author="Simon Ratcliffe, Ludwig Schwardt",
-    author_email="sratcliffe@ska.ac.za, ludwig.schwardt@gmail.com",
+    author_email="sratcliffe@ska.ac.za, ludwig@ska.ac.za",
     url="http://code.google.com/p/mplh5canvas/",
+    description="A matplotlib backend based on HTML5 Canvas.",
+    long_description=README + "\n\n" + INSTALL,
     license="BSD",
+    classifiers=["Environment :: Console",
+                 "Intended Audience :: Developers",
+                 "Intended Audience :: End Users/Desktop",
+                 "License :: OSI Approved :: BSD License",
+                 "Operating System :: OS Independent",
+                 "Programming Language :: Python :: 2",
+                 "Topic :: Software Development :: Libraries :: Python Modules",
+                ],
     packages = find_packages(),
     scripts = [],
     zip_safe = False,
