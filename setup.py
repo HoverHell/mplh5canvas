@@ -1,9 +1,13 @@
 #!/usr/bin/env python
 from setuptools import setup, find_packages
 from distutils.version import LooseVersion
+import os
+os.environ['MPLCONFIGDIR'] = "."
+ # temporarily redirect configuration directory
+ # to prevent matplotlib import testing for
+ # writeable directory outside of sandbox
 from matplotlib import __version__ as mpl_version
 import sys
-import os.path
 
 if LooseVersion(mpl_version) < LooseVersion("0.99.1.1"):
     print "The HTML5 Canvas Backend requires matplotlib 0.99.1.1 or newer. " \
