@@ -343,7 +343,7 @@ base_html_canvii = """
     var server_port = <!--server_port-->;
     function connect_manager() {
      if (management_socket) management_socket.close()
-     management_socket = new WebSocket('ws://<!--server_ip-->:' + (server_port+1) + '/thumbs');
+     management_socket = new WebSocket('ws://<!--server_ip-->:' + (server_port+1) + '/');
      management_socket.onmessage = function(e) { 
       last_manage = e.data;
       eval(e.data);
@@ -363,7 +363,7 @@ base_html_canvii = """
     function start_plotting(id, port) {
      free_frames[id] = port;
      //if (!(id in sockets)) {
-      sockets[id] = new WebSocket('ws://<!--server_ip-->:' + port + '/do');
+      sockets[id] = new WebSocket('ws://<!--server_ip-->:' + port + '/');
       document.getElementById('status_' + id).innerText = "Connecting to port " + port + "..."
       sockets[id].onmessage = function(e) { 
        document.getElementById('status_' + id).innerText = "Connected"

@@ -16,7 +16,7 @@ INSTALL = open(os.path.join(here, 'INSTALL.rst')).read()
 
 setup (
     name="mplh5canvas",
-    version="0.5",
+    version="0.6",
     author="Simon Ratcliffe, Ludwig Schwardt",
     author_email="sratcliffe@ska.ac.za, ludwig@ska.ac.za",
     url="http://code.google.com/p/mplh5canvas/",
@@ -33,5 +33,6 @@ setup (
                 ],
     packages = find_packages(),
     scripts = [],
+    install_requires = ['mod_pywebsocket'],
     zip_safe = False,
 )

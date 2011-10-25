@@ -24,13 +24,16 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 import BaseHTTPServer
 import simple_server
-import msgutil
 import base_page
 import thread
 import sys
 import re
 import socket
 import time
+import logging
+
+logger = logging.getLogger("mplh5canvas.management_server")
+
 try:
     import netifaces
 except:
@@ -43,10 +46,11 @@ class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     thumb_html = base_page.thumb_html
     thumb_inner = base_page.thumb_inner
     h5m = None
-    server_ip = ""
     server_port = ""
     custom_content = None
     def do_GET(self):
+        server_ip = self.connection.getsockname()[0]
+        logger.info("Server ip for connection: %s " % server_ip)
         match = re.compile("\/(\d*)$").match(self.path)
         ports = self.h5m._figures.keys()
         ports.sort()
@@ -56,7 +60,7 @@ class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
                 canvas = self.h5m._figures[port]
             req_layout = (req_layout == '' and "" or "set_layout(" + str(req_layout) + ");")
             bh = self.base_html + self.base_html_decoration + self.base_html_canvii
-            self.wfile.write(bh.replace('<!--requested_layout-->',req_layout).replace('<!--server_ip-->',self.server_ip).replace('<!--server_port-->',self.server_port).replace('<!--canvas_top-->','105').replace('<!--canvas_left-->','10').replace('<!--canvas_position-->','absolute'))
+            self.wfile.write(bh.replace('<!--requested_layout-->',req_layout).replace('<!--server_ip-->',server_ip).replace('<!--server_port-->',self.server_port).replace('<!--canvas_top-->','105').replace('<!--canvas_left-->','10').replace('<!--canvas_position-->','absolute'))
         elif self.path.startswith("/figure"):
             try:
                 fig_no = int(self.path[7:]) - 1
@@ -69,7 +73,7 @@ class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
                 custom_content = self.h5m._figures[port]._custom_content
                 bh = self.base_html + self.base_html_canvii
                 req_layout = "plot_if_possible(" + str(port)  + ");"
-                content = bh.replace('<!--requested_layout-->',req_layout).replace('<!--server_ip-->',self.server_ip).replace('<!--server_port-->',self.server_port).replace('<!--canvas_top-->','10').replace('<!--canvas_left-->','10').replace('<!--canvas_position-->','absolute')
+                content = bh.replace('<!--requested_layout-->',req_layout).replace('<!--server_ip-->',server_ip).replace('<!--server_port-->',self.server_port).replace('<!--canvas_top-->','10').replace('<!--canvas_left-->','10').replace('<!--canvas_position-->','absolute')
                 if custom_content is not None:
                     content = custom_content.replace("<!--figure-->", content)
                 self.wfile.write(content)
@@ -82,7 +86,6 @@ class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             thumbs = ""
             for port in ports:
                 canvas = self.h5m._figures[port]
-                #print "Found a figure at port",port
                 t = self.thumb_inner.replace("<id>",str(figure_count))
                 t = t.replace("<!--thumbnail_port-->",str(port))
                 t = t.replace("<!--width-->",str(canvas._width)).replace("<!--height-->",str(canvas._height))
@@ -90,7 +93,6 @@ class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
                 header = str(canvas._header).replace("\n","")
                 if frame.startswith("c."): frame = "c_t_" + str(figure_count) + frame[1:]
                 thumbs += t.replace('<!--thumbnail_content-->',header + frame) + "\n"
-                #print t.replace('<!--thumbnail_content-->',str(canvas._frame).replace("\n","")) + "\n"
                 figure_count += 1
              # insert thumbnail code into base page 
             self.wfile.write(self.thumb_html.replace("<!--thumbnail_body-->",thumbs))
@@ -119,15 +121,15 @@ class H5Manager(object):
                 break
             except Exception, e:
                 if x == limit - 1:
-                    print "Tried to find an available port pair from %i to %i, but none seemed available. You can only spawn %i python mplh5 instances on this machine.\nThis limit can be changed in init.py." % (base_port, base_port + (x-1)*100, limit)
+                    logger.error("Tried to find an available port pair from %i to %i, but none seemed available. You can only spawn %i python mplh5 instances on this machine.\nThis limit can be changed in init.py." % (base_port, base_port + (x-1)*100, limit))
                     sys.exit(1)
                 else:
-                    print "Failed to start management servers on ports (%i, %i). Trying another pair..." % (port_to_try, port_to_try+1)
+                    logger.error("Failed to start management servers on ports (%i, %i). Trying another pair..." % (port_to_try, port_to_try+1))
+                    logger.error(e)
                     time.sleep(0.05)
          # we have a port :)
         self.port = port_to_try
         RequestHandler.h5m = self
-        RequestHandler.server_ip = self.ip
         RequestHandler.server_port = str(self.port)
         self.url = "http://%s:%i" % (self.ip, self.port)
         self._request_handlers = {}
@@ -136,11 +138,17 @@ class H5Manager(object):
         print "===================================================================================="
         sys.stdout.flush()
 
-    def _external_ip(self, preferred_ifaces=('eth0', 'en0')):
+    def _external_ip(self, preferred_prefixes=('eth', 'en')):
         """Return the external IPv4 address of this machine.
 
         Attempts to use netifaces module if available, otherwise
         falls back to socket.
+
+        Parameters
+        ----------
+        preferred_prefixes : tuple
+            A tuple of string prefixes for network interfaces to match. e.g. ('eth','en') matches ethX and enX
+            with a preference for lowest number first (eth0 over eth3).
 
         Returns
         -------
@@ -156,12 +164,12 @@ class H5Manager(object):
             for iface in netifaces.interfaces():
                 for addr in netifaces.ifaddresses(iface).get(netifaces.AF_INET, []):
                     if 'addr' in addr:
-                        if iface in preferred_ifaces:
-                            preferred_ips.append(addr['addr'])
-                        else:
-                            other_ips.append(addr['addr'])
+                        for prefix in preferred_prefixes:
+                            if iface.startswith(prefix): preferred_ips.append(addr['addr'])
+                        other_ips.append(addr['addr'])
+                         # will duplicate those in preferred_ips but this doesn't matter as we only
+                         # use other_ips if preferred is empty.
             ips = preferred_ips + other_ips
-
         if ips:
             return ips[0]
         else:
@@ -171,10 +179,10 @@ class H5Manager(object):
         self._request_handlers[request] = request.connection.remote_addr[0]
         while True:
             try:
-                line = msgutil.receive_message(request).encode('utf-8')
-                msgutil.send_message(request, "update_thumbnails();".decode('utf-8'))
+                line = request.ws_stream.receive_message()
+                request.ws_stream.send_message("update_thumbnails();".decode('utf-8'))
             except Exception, e:
-                #print "\nRemoving registered management handler",e
+                logger.debug("Removing registered management handler (%s)" % e)
                 if self._request_handlers.has_key(request): del self._request_handlers[request]
                 return
 
@@ -183,9 +191,9 @@ class H5Manager(object):
         for r in self._request_handlers.keys():
             try:
                 recipients += str(r.connection.remote_addr[0]) + " "
-                msgutil.send_message(r, "update_thumbnails();".decode('utf-8'))
+                r.ws_stream.send_message("update_thumbnails();".decode('utf-8'))
             except AttributeError:
-                print "Connection",r.connection.remote_addr[0],"has gone. Closing..."
+                logger.debug("Connection %s has gone. Closing..." % r.connection.remote_addr[0])
                 del self._request_handlers[request]
 
 
@@ -200,7 +208,7 @@ class H5Manager(object):
         self.tell()
 
     def handle_base(self):
-        print "Request for base page..."
+        pass
 
     def parse_web_cmd(self, s):
         action = s[1:s.find(" ")]
@@ -210,13 +218,3 @@ class H5Manager(object):
             method(*args)
         else:
             self.handle_base()
-
-    def on_request(self, request):
-        while True:
-            try:
-                line = msgutil.receive_message(request).encode('utf-8')
-                print "Received:",line
-                self.parse_web_cmd(line)
-            except Exception, e:
-                print "\nCaught exception. Removing registered handler",e
-                return

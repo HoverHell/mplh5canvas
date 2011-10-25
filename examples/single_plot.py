@@ -2,6 +2,11 @@
 """Simple static plot, mostly for testing zooming..."""
 
 import matplotlib
+import mplh5canvas
+mplh5canvas.set_log_level("warning")
+ # set the log level before using module
+ # default is 'warning', it is done here
+ # to illustrate the syntax
 matplotlib.use('module://mplh5canvas.backend_h5canvas')
 from pylab import *
 import time
@@ -14,4 +19,5 @@ xlabel('time (s)')
 ylabel('voltage (mV)')
 title('Frist Post')
 f = gcf()
-show()
+show(open_plot=True)
+ # show figure and attempt to open in users current webbrowser

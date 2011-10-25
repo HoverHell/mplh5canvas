@@ -38,10 +38,14 @@ from matplotlib.mathtext import MathTextParser
 from matplotlib import _png
 
 import simple_server
-import msgutil
 import management_server
 import uuid
 from mplh5canvas import MANAGEMENT_PORT_BASE, MANAGEMENT_LIMIT, FIGURE_LIMIT
+
+import logging
+
+logger = logging.getLogger("mplh5canvas.backed_h5canvas")
+
 
 _capstyle_d = {'projecting' : 'square', 'butt' : 'butt', 'round': 'round',}
  # mapping from matplotlib style line caps to H5 canvas
@@ -53,7 +57,6 @@ _figure_ports['count'] = 0
 #_request_handlers = {}
 _frame = ""
 _test = False
-_quiet = True
 _metrics = False
 
 h5m = management_server.H5Manager(MANAGEMENT_PORT_BASE, MANAGEMENT_LIMIT)
@@ -208,7 +211,6 @@ class RendererH5Canvas(RendererBase):
         self.width = width
         self.height = height
         self.dpi = dpi
-        #print "Canvas Width:",width,",Height:",height,",DPI:",dpi
         self.ctx = ctx
         self._image_count = 0
          # used to uniquely label each image created in this figure...
@@ -318,7 +320,6 @@ class RendererH5Canvas(RendererBase):
         return None
 
     def draw_markers(self, gc, marker_path, marker_trans, path, trans, rgbFace=None):
-    #    print "Draw markers called: marker_path=",marker_path,",marker_trans=",marker_trans,",path=",path,",trans=",trans
         t = time.time()
         for vertices, codes in path.iter_segments(trans, simplify=False):
             if len(vertices):
@@ -354,7 +355,6 @@ class RendererH5Canvas(RendererBase):
         self.ctx.write("%s.drawImage(canv_im_%s, %g, %g, %g, %g);" % (self.ctx._context_name, uname, x, y, width, height))
          # draw the image as loaded into canv_im_%d...
         self._image_count += 1
-        #print "Placed image with w=%g h=%g at x=%g y=%g" % (width, height, x, y)
 
     def _reset_clip(self):
         self.ctx.restore()
@@ -391,8 +391,6 @@ class RendererH5Canvas(RendererBase):
             fname = findfont(prop)
             font = self.fontd.get(fname)
             if font is None:
-                #print "Using font",str(fname)
-                #print type(prop)
                 font = FT2Font(str(fname))
                 self.fontd[fname] = font
             self.fontd[key] = font
@@ -401,12 +399,11 @@ class RendererH5Canvas(RendererBase):
         return font
 
     def draw_tex(self, gc, x, y, s, prop, angle, ismath=False):
-        print "Tex support is currently not implemented. Text element '",s,"' will not be displayed..."
+        logger.error("Tex support is currently not implemented. Text element '%s' will not be displayed..." % s)
 
     def draw_text(self, gc, x, y, s, prop, angle, ismath=False):
         if self._last_clip is not None or self._last_clip_path is not None: self._reset_clip()
         t = time.time()
-        #print "Draw", s, "at x:" ,x, "y:" , y, "angle", angle
         if ismath:
             self._draw_mathtext(gc, x, y, s, prop, angle)
             return
@@ -420,7 +417,6 @@ class RendererH5Canvas(RendererBase):
             ctx.translate(x, y)
             ctx.rotate(-angle)
             ctx.translate(-x, -y)
-        #print "Font property: ", prop
         font_size = self.points_to_pixels(prop.get_size_in_points())
         font_str = '%s %s %.3gpx %s, %s' % (prop.get_style(), prop.get_weight(), font_size, prop.get_name(), prop.get_family()[0])
         ctx.font = font_str
@@ -469,7 +465,6 @@ class RendererH5Canvas(RendererBase):
             w /= 64.0  # convert from subpixels
             h /= 64.0
             d = font.get_descent() / 64.0
-        #print "String '%s' has dimensions w=%g h=%g d=%g" % (s, w, h, d)
         return w, h, d
 
     def new_gc(self):
@@ -517,9 +512,8 @@ def draw_if_interactive():
     For GUI backends - this should be overriden if drawing should be done in
     interactive python mode
     """
-    #print "In interactive..."
 
-def show(block=True, layout='', open_plot=True):
+def show(block=True, layout='', open_plot=False):
     """
     This show is typically called via pyplot.show.
     In general usage a script will have a sequence of figure creation followed by a pyplot.show which
@@ -535,7 +529,7 @@ def show(block=True, layout='', open_plot=True):
         try:
             webbrowser.open_new_tab(h5m.url + "/" + str(layout))
         except:
-            print "Failed to open figure page in your browser. Please browse to " + h5m.url + "/" + str(Gcf.get_active().canvas.figure.number)
+            logger.warning("Failed to open figure page in your browser. Please browse to %s/%s" % (h5m.url,str(Gcf.get_active().canvas.figure.number)))
     if block and not _test:
         print "Showing figures. Hit Ctrl-C to finish script and close figures..."
         try:
@@ -556,7 +550,6 @@ def new_figure_manager(num, *args, **kwargs):
     thisFig = FigureClass(*args, **kwargs)
     canvas = FigureCanvasH5Canvas(thisFig)
     manager = FigureManagerH5Canvas(canvas, num)
-    #print "New figure created..."
     thisFig.__dict__['show'] = canvas.draw
     thisFig.__dict__['close'] = canvas.close
     thisFig.__dict__['show_browser'] = canvas.show_browser
@@ -582,10 +575,9 @@ class FigureCanvasH5Canvas(FigureCanvasBase):
 
     def __init__(self, figure):
         if _figure_ports['count'] >= FIGURE_LIMIT:
-            print "Figure limit of %i reached. Returning NULL figure" % FIGURE_LIMIT
+            logger.warning("Figure limit of %i reached. Returning NULL figure" % FIGURE_LIMIT)
             return None
         FigureCanvasBase.__init__(self, figure)
-        #print "Init of Canvas called....",figure
         self.frame_count = 0
         self._user_event = None
         self._user_cmd_ret = None
@@ -600,14 +592,14 @@ class FigureCanvasH5Canvas(FigureCanvasBase):
         self._custom_content = None
         self._width, self._height = self.get_width_height()
         self.flip = Affine2D().scale(1, -1).translate(0, self._height)
-        #print "Figure Width:",self._width,",Height:",self._height
-        if not _quiet: print "Creating canvas web server on port %i" % self._server_port
+        logger.debug("Initialising figure of width: %i, height: %i" % (self._width, self._height))
+        logger.debug("Creating canvas web server on port %i" % self._server_port)
         try:
             self._server = simple_server.WebSocketServer(('', self._server_port), self.web_socket_transfer_data, simple_server.WebSocketRequestHandler)
             self._thread = thread.start_new_thread(self._server.serve_forever, ())
             register_web_server(self._server_port, self)
         except Exception, e:
-            print "Failed to create webserver. (%s)" % str(e)
+            logger.error("Failed to create webserver. (%s)" % str(e))
             sys.exit(1)
 
     def register_request_handler(self, request):
@@ -617,13 +609,13 @@ class FigureCanvasH5Canvas(FigureCanvasBase):
             self.send_frame(self._header + self._frame_extra)
 
     def parse_web_cmd(self, s):
-        action = s[1:s.find(" ")]
-        args = s[s.find("args='")+6:-2].split(",")
-        method = getattr(self, "handle_%s" % action)
-        if method:
+        try:
+            action = s[1:s.find(" ")]
+            args = s[s.find("args='")+6:-2].split(",")
+            method = getattr(self, "handle_%s" % action)
             method(*args)
-        else:
-            print "Cannot find request method handle_%s" % action
+        except AttributeError:
+            logger.warning("Cannot find request method handle_%s" % action)
 
     def show_browser(self):
         self.draw()
@@ -634,15 +626,15 @@ class FigureCanvasH5Canvas(FigureCanvasBase):
             try:
                 self._user_cmd_ret(*args)
             except Exception, e:
-                print "User cmd ret exception (",e,")"
+                logger.warning("User cmd ret exception %s" % str(e))
 
     def handle_user_event(self, *args):
         if self._user_event is not None:
             try:
                 self._user_event(*args)
             except Exception, e:
-                print "User event exception (",e,")"
-        else: print "User event called but no callback registered to handle it..."
+                logger.warning("User event exception %s" % str(e))
+        else: logger.info("User event called but no callback registered to handle it...")
 
     def handle_click(self, x, y, button):
         self.button_release_event(float(x),float(y),int(button))
@@ -724,12 +716,11 @@ class FigureCanvasH5Canvas(FigureCanvasBase):
         self.register_request_handler(request)
         while True:
             try:
-                line = msgutil.receive_message(request).encode('utf-8')
+                line = request.ws_stream.receive_message()
+                logger.debug("Received web cmd: %s" % line)
                 self.parse_web_cmd(line)
-                #msgutil.send_message(request, str(_figure_ports.keys())[1:-1].decode('utf-8'))
-                #msgutil.send_message(request, _frame.decode('utf-8'))
             except Exception, e:
-                #print "\nCaught exception. Removing registered handler",e
+                logger.error("Caught exception (%s). Removing registered handler" % str(e))
                 self.deregister_request_handler(request)
                 return
 
@@ -737,7 +728,7 @@ class FigureCanvasH5Canvas(FigureCanvasBase):
         self._stop_server()
 
     def _stop_server(self):
-        if not _quiet: print "Stopping canvas web server..."
+        logger.debug("Stopping canvas web server...")
         self._server.shutdown()
         deregister_web_server(self._server_port)
 
@@ -758,9 +749,8 @@ class FigureCanvasH5Canvas(FigureCanvasBase):
          # clear the canvas...  
         t = time.time()
         self.figure.draw(renderer)
-        if _metrics:
-            print "Render took %s s" % (time.time() - t)
-            print "Path time: %s, Text time: %s, Marker time: %s, Sub time: %s" % (renderer._path_time, renderer._text_time, renderer._marker_time, renderer._sub_time)
+        logger.debug("Render took %s s" % (time.time() - t))
+        logger.debug("Path time: %s, Text time: %s, Marker time: %s, Sub time: %s" % (renderer._path_time, renderer._text_time, renderer._marker_time, renderer._sub_time))
         self.frame_count+=1
         for i,ax in enumerate(self.figure.axes):
             corners = ax.bbox.corners()
@@ -783,7 +773,7 @@ class FigureCanvasH5Canvas(FigureCanvasBase):
         if self._first_frame:
             h5m.tell()
             self._first_frame = False
-        if _metrics: print "Overall draw took %s s, with %i clipcount" % ((time.time() - ts), renderer._clip_count)
+        logger.debug("Overall draw took %s s, with %i clipcount" % ((time.time() - ts), renderer._clip_count))
 
     def send_cmd(self, cmd):
         """Send a string of javascript to be executed on the client side of each connected user."""
@@ -792,20 +782,20 @@ class FigureCanvasH5Canvas(FigureCanvasBase):
     def send_frame(self, frame):
         for r in self._request_handlers.keys():
             try:
-                msgutil.send_message(r, frame.decode('utf-8'))
+                r.ws_stream.send_message(frame.decode('utf-8'))
             except AttributeError:
                  # connection has gone
-                print "Connection",r.connection.remote_addr[0],"has gone. Closing..."
+                logger.info("Connection %s has gone. Closing..." % r.connection.remote_addr[0])
             except Exception, e:
-                print "Failed to send message",e
+                logger.warning("Failed to send message (%s)" % str(e))
 
     def show(self):
-        print "Show called... Not implemented in this function..."
+        logger.info("Show called... Not implemented in this function...")
 
     filetypes = {'js': 'HTML5 Canvas'}
 
     def print_js(self, filename, *args, **kwargs):
-        print "Print js called with args",args,"and **kwargs",kwargs
+        logger.debug("Print js called with args %s and kwargs %s" % (str(args), str(kwargs)))
         width, height = self.get_width_height()
         writer = open(filename, 'w')
         renderer = RendererH5Canvas(width, height, writer, dpi=self.figure.dpi)
@@ -826,10 +816,10 @@ class FigureManagerH5Canvas(FigureManagerBase):
 
     def destroy(self, *args):
         self.canvas._stop_server()
-        if not _quiet: print "Destroy called on figure manager",args
+        logger.debug("Destroy called on figure manager")
 
     def show(self):
-        print "Show called for figure manager"
+        logger.debug("Show called for figure manager")
 
 FigureManager = FigureManagerH5Canvas
 
