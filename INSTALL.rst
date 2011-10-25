@@ -2,11 +2,10 @@ Requirements
 ------------
 
 We have tried to keep this module as free of dependencies as possible in order
-to open up the widest possible installation base. It may, however, be more
-practical to include some external dependencies in the future. For example, we
-pull in and modify the excellent `pywebsocket`_ code for handling our browser
-communications. As the standard emerges, it may be better to depend on this
-directly.
+to open up the widest possible installation base. We do however depend
+on the excellent `pywebsocket`_ code for handling our browser
+communications. This allows us to better track the WebSocket standard
+as it continues to evolve.
 
 The current base system requirements prior to installation are:
 
@@ -19,13 +18,15 @@ support). The status quo for the main browsers in May 2011 is:
 
 * **Chrome 9.0+** works out of the box and is the target browser
 
-* **Safari 5.0+** works out of the box
+* **Safari 5.0+** works out of the box (both OSX and IOS versions)
 
-* **Firefox 4.0+** works after unblocking WebSocket support:
+* **Firefox 4.0** works after unblocking WebSocket support:
 
     - Browse to the ``about:config`` preferences page and promise to be careful
     - Type ``websocket`` in the filter to find the right option
     - Double-click on ``network.websocket.override-security-block`` to set it to ``true``
+
+* **Firefox 5.0+** is not supported due to a custom websocket class.
 
 * **Opera 11.0+** works after unblocking WebSocket support:
 
@@ -35,14 +36,6 @@ support). The status quo for the main browsers in May 2011 is:
     - Check the tickbox and click on the Save button
 
 * **Internet Explorer** is not supported
-
-Both Firefox and Opera currently support WebSockets, but `block it by default`_.
-This is likely to change in the near future, and in the meantime WebSockets
-remain a simple and powerful way to obtain persistent connections across a wide
-variety of platforms given the limited available developer resources.
-
-The code now supports both draft-75 and draft-76 WebSockets and so should be
-reasonably future proof (until they change the standard again).
 
 Netifaces
 ^^^^^^^^^
@@ -56,6 +49,17 @@ If available it will use the `netifaces`_ module which generally does a better
 job. It is recommended that you install this by running::
 
   easy_install netifaces
+
+mod_pywebsocket
+^^^^^^^^^^^^^^^
+
+This will be installed along with mplh5canvas if you follow the instructions below.
+However you can install it yourself::
+
+    easy_install mod_pywebsocket
+
+The `PyPI`_ page may be out of data as we maintain this ourselves. The master
+repository for mod_pywebsocket is `pywebsocket`_.
 
 Installation
 ------------
