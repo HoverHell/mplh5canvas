@@ -20,13 +20,15 @@ parser.add_option("-c", "--crash", action="store_true", default=False, help="Do 
 (options, args) = parser.parse_args()
 
 # Matplotlib examples that should be excluded as they bork things.
-exclusions = ['__init__.py', 'customize_rc.py', 'to_numeric.py',
+exclusions = [# mpl_examples/pylab_examples
+              '__init__.py', 'customize_rc.py', 'to_numeric.py',
               'dannys_example.py', # uses TeX - which borks matplotlib if you don't have TeX installed
-              'tex_unicode_demo.py','tex_demo.py', # see above
-              'usetex_fonteffects.py','usetex_demo.py','usetex_baseline_test.py', # see above
+              'demo_tight_layout.py', # expects Canvas.get_renderer method, then falls back to Agg backend at very inopportune moment
               'hexbin_demo.py', 'hexbin_demo2.py', # seems to create an infinite length polygon...
               'pcolor_demo.py', 'pcolor_log.py', # what the heck is this rubbish. imshow ftw...
-              'scatter_profile.py','quadmesh_demo.py' # very slow for now
+              'scatter_profile.py','quadmesh_demo.py', # very slow for now
+              'tex_unicode_demo.py','tex_demo.py', # uses TeX
+              'usetex_fonteffects.py','usetex_demo.py','usetex_baseline_test.py', # uses TeX
              ]
 
 files = []
