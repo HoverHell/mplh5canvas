@@ -16,18 +16,18 @@ parser = OptionParser()
 parser.add_option("-d", "--dir", type="string", default=".",help="Specify the directory containing examples to be tested. [default=%default]")
 parser.add_option("-f", "--file", type="string", default=None, help="Specify a single file to test. Overrides any directory specified. [default=%default]")
 parser.add_option("-w","--wildcard", type="string", default="*", help="Match the filenames to use. e.g. * for all, image_ for all image demos. [default=%default]")
+parser.add_option("-c", "--crash", action="store_true", default=False, help="Do not catch script exceptions. [default=%default]")
 (options, args) = parser.parse_args()
 
-exclusions = ['customize_rc.py','dannys_example.py','hexbin_demo.py','hexbin_demo2.py','pcolor_demo.py','pcolor_log.py','usetex_fonteffects.py','usetex_demo.py','usetex_baseline_test.py','to_numeric.py','tex_unicode_demo.py','tex_demo.py','scatter_profile.py','__init__.py','quadmesh_demo.py']
- # matplotlib examples that should be excluded as they bork things.
- #
- # dannys_example.py - uses tex - which borks matplotlib if you don't have text installed
- # usetext* , tex* - as above
- # hexbin_demo.py - seems to create an infinite length polygon...
- # pcolor_demo.py - what the heck is this rubbish. imshow ftw...
- # pcolor_log.py - see above
- # quadmesh_demo.py - very slow for now
- # scatter_profile.py - very slow
+# Matplotlib examples that should be excluded as they bork things.
+exclusions = ['__init__.py', 'customize_rc.py', 'to_numeric.py',
+              'dannys_example.py', # uses TeX - which borks matplotlib if you don't have TeX installed
+              'tex_unicode_demo.py','tex_demo.py', # see above
+              'usetex_fonteffects.py','usetex_demo.py','usetex_baseline_test.py', # see above
+              'hexbin_demo.py', 'hexbin_demo2.py', # seems to create an infinite length polygon...
+              'pcolor_demo.py', 'pcolor_log.py', # what the heck is this rubbish. imshow ftw...
+              'scatter_profile.py','quadmesh_demo.py' # very slow for now
+             ]
 
 files = []
 p = os.listdir(options.dir+"/")
@@ -71,7 +71,10 @@ for count, filename in enumerate(files):
         print "Failed to run script %s. (%s)" % (filename, str(e))
         html += "<td>Failed to execute script.<td>Failed to execute script.<td>Failed to execute script.</tr>"
         thtml += "<td>Failed to execute script.<td>Failed to execute script.<td>Failed to execute script.</tr>"
-        continue
+        if options.crash:
+            raise
+        else:
+            continue
     f = gcf()
     f.canvas.draw(ctx_override="c_" + str(count))
     w, h = f.get_size_inches() * f.get_dpi()
@@ -84,26 +87,32 @@ for count, filename in enumerate(files):
         html += "\n</script></canvas>"
         thtml += "<td><img src='%s' width='%dpx' height='%dpx' />" % ("h5canvas_" + png_filename, w, h)
     except Exception, e:
-        print "Failed to execute %s. (%s)" % (filename, str(e))
+        print "Failed to create Canvas for %s. (%s)" % (filename, str(e))
         html += "<td>Failed to create Canvas"
         thtml += "<td>Failed to create Canvas"
+        if options.crash:
+            raise
 
     try:
         f.canvas.print_png("./output/" + png_filename, dpi=f.dpi)
         html += "<td><img src='%s' width='%dpx' height='%dpx' />" % (png_filename, w, h)
         thtml += "<td><img src='%s' width='%dpx' height='%dpx' />" % (png_filename, w, h)
     except Exception, e:
-        print "Failed to execute %s. (%s)" % (filename, str(e))
+        print "Failed to create PNG for %s. (%s)" % (filename, str(e))
         html += "<td>Failed to create PNG"
         thtml += "<td>Failed to create PNG"
+        if options.crash:
+            raise
 
     try:
         svg_filename = filename[:-2] + "svg"
         f.canvas.print_svg("./output/" + svg_filename, dpi=f.dpi)
         html += "<td><img src='%s' width='%dpx' height='%dpx' />" % (svg_filename, w, h)
     except Exception, e:
-        print "Failed to execute %s. (%s)" % (filename, str(e))
+        print "Failed to create SVG for %s. (%s)" % (filename, str(e))
         html += "<td>Failed to create SVG"
+        if options.crash:
+            raise
     switch_backend('module://mplh5canvas.backend_h5canvas')
     html += "</tr>"
     thtml += "</tr>"

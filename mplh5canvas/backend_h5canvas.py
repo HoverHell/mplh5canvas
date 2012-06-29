@@ -637,8 +637,8 @@ class FigureCanvasH5Canvas(FigureCanvasBase):
         else: logger.info("User event called but no callback registered to handle it...")
 
     def handle_click(self, x, y, button):
-        self.button_release_event(float(x),float(y),int(button))
         self.button_press_event(float(x), float(y), int(button))
+        self.button_release_event(float(x),float(y),int(button))
          # currently we do not distinguish between press and release on the javascript side. So call both :)
 
     def handle_resize(self, width, height):
