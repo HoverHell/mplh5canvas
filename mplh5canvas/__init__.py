@@ -30,7 +30,8 @@ logger.setLevel(logging.getLevelName(LOG_LEVEL.upper()))
 if LOG_FILE:
     handler = logging.handlers.RotatingFileHandler(LOG_FILE, 'a')
 else:
-    handler = logging.StreamHandler()
+    import sys
+    handler = logging.StreamHandler(stream=sys.stdout)
 formatter = logging.Formatter('[%(asctime)s] [%(levelname)s] %(name)s: %(message)s')
 handler.setFormatter(formatter)
 logger.addHandler(handler)
