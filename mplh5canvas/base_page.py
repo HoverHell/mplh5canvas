@@ -39,6 +39,7 @@ thumb_inner = """
   <script>
    function gen_thumb<id> () {
     var ax_bb = new Array();
+    var ax_datalim = new Array();
     thumbnail_ports[<id>] = <!--thumbnail_port-->;
     var el = document.getElementById('thumbnail_<id>'); 
     var id = <id>;
@@ -278,6 +279,7 @@ base_html_canvii = """
     }
 
     var ax_bb = new Array();
+    var ax_datalim = new Array();
     cursor_info = new Array();
     cursor_info[0] = 0;
     frame_counter = new Array();
@@ -313,6 +315,7 @@ base_html_canvii = """
       for (var i=0; i < ldiv[id].length; i++) ldiv[id][i].style.display= "none";
        // hide any existing limit divs...
       ax_bb = new Array();
+      ax_datalim = new Array();
       eval(last_frames[id]); 
       frame_header();
        // execute the header. This will perform initial setup that is required (such as images) and then run frame_body..
@@ -599,7 +602,7 @@ base_html_canvii = """
     }
 
 
-    function calc_coords(id, axes) {
+    function conv_coords(id, pixelCoord, xdir) {
      var atop = 0;
      var aleft = 0;
      if (document.getElementById("anchor_div") != null) {
@@ -607,9 +610,20 @@ base_html_canvii = """
       atop = an.offsetTop;
       aleft = an.offsetLeft;
      }
-        
      var plc = document.getElementById("plot_canvas_" + id);
-     return axes + "," + (startX - (plc.offsetLeft + aleft)) + "," + (canvii[id].height - (stopY - (plc.offsetTop + atop))) + "," + (stopX - (plc.offsetLeft + aleft)) + "," + (canvii[id].height - (startY - (plc.offsetTop + atop)));
+     if (xdir) {
+      return pixelCoord - (plc.offsetLeft + aleft);
+     } else {
+      return canvii[id].height - (pixelCoord - (plc.offsetTop + atop));
+     }
+    } // convert from canvas pixels to mpl pixels
+
+    function calc_coords(id, axes) {
+     var mplStartX = conv_coords(id, startX, true);
+     var mplStartY = conv_coords(id, startY, false);
+     var mplStopX = conv_coords(id, stopX, true);
+     var mplStopY = conv_coords(id, stopY, false);
+     return axes + "," + mplStartX + "," + mplStopY + "," + mplStopX + "," + mplStartY;
     } // calculate the coordinates of the bounding box given by the canvas and the axes
 
     function do_pan(id, axes) {
@@ -650,9 +664,38 @@ base_html_canvii = """
       zdiv[id].style.width = e.pageX - startX + "px";
       zdiv[id].style.height = e.pageY - startY + "px";
      }
-     else {
+     if (cursor_info[id] == 0) {
+       var dataX = Number.NaN;
+       var dataY = Number.NaN;
+       for (var i=0; i < ax_bb.length; i++) {
+         ax_width = ax_bb[i][4] - ax_bb[i][0];
+         ax_height = ax_bb[i][3] - ax_bb[i][1];
+         if ((ax_width == 0.0) || (ax_height == 0.0)) {
+           continue;
+         }
+         var pixX = conv_coords(id, e.pageX, true);
+         var pixY = conv_coords(id, e.pageY, false);
+         var relX = (pixX - ax_bb[i][0] - canvii[id].offsetLeft) / ax_width;
+         var relY = (pixY - ax_bb[i][1] - canvii[id].offsetTop) / ax_height;
+         // Remember that HTML y increases from top to bottom while data ylim goes other way
+         if ((relX >= 0.0) && (relX <= 1.0) && (relY >= 0.0) && (relY <= 1.0)) {
+           // Check if cursor is above current axes (this should be true anyway due to div!)
+           data_width = ax_datalim[i][1] - ax_datalim[i][0];
+           data_height = ax_datalim[i][3] - ax_datalim[i][2];
+           dataX = relX * data_width + ax_datalim[i][0];
+           dataY = relY * data_height + ax_datalim[i][2];
+           break;
+         } else {
+           dataX = Number.NaN;
+           dataY = Number.NaN;
+         }
+       }
+       var cursor_str = "";
+       if (!isNaN(dataX) && !isNaN(dataY)) {
+         cursor_str = "Cursor:  " + dataX.toString().substr(0, 6) + ", " + dataY.toString().substr(0, 6);
+       }
+       document.getElementById('cursor_info_' + id).innerText = cursor_str;
      }
-     if (cursor_info[id] == 0) document.getElementById('cursor_info_' + id).innerText = "Cursor: " + e.pageX + "," + e.pageY;
      return false;
     }
     document.captureEvents(Event.MOUSEMOVE)

@@ -779,7 +779,9 @@ class FigureCanvasH5Canvas(FigureCanvasBase):
             corners = ax.bbox.corners()
             bb_str = ""
             for corner in corners: bb_str += str(corner[0]) + "," + str(corner[1]) + ","
-            ctx.add_header("ax_bb[" + str(i) + "] = [" + bb_str[:-1] + "];")
+            ctx.add_header("ax_bb[%d] = [%s];" % (i, bb_str[:-1]))
+            datalim_str = ','.join([('%s' % (dl,)) for dl in ax.axis()])
+            ctx.add_header("ax_datalim[%d] = [%s];" % (i, datalim_str))
         if renderer._image_count > 0:
             ctx.add_header("var im_left_to_load_%s = %i;" % (ctx._context_name, renderer._image_count), start=True)
         else:
