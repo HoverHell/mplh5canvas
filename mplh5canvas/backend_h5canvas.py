@@ -35,7 +35,7 @@ from matplotlib.cbook import maxdict
 from matplotlib.ft2font import FT2Font, LOAD_NO_HINTING
 from matplotlib.font_manager import findfont
 from matplotlib.mathtext import MathTextParser
-from matplotlib import _png
+from matplotlib import _png, is_interactive
 
 import simple_server
 import management_server
@@ -507,11 +507,12 @@ class GraphicsContextH5Canvas(GraphicsContextBase):
 ########################################################################
 
 def draw_if_interactive():
-    """
-    For image backends - is not required
-    For GUI backends - this should be overriden if drawing should be done in
-    interactive python mode
-    """
+    if is_interactive():
+        figManager =  Gcf.get_active()
+        if figManager is not None:
+            figManager.show()
+            show(block=False)
+             # enforce a local show...
 
 def show(block=True, layout='', open_plot=False):
     """
@@ -588,6 +589,7 @@ class FigureCanvasH5Canvas(FigureCanvasBase):
         self._home_x = {}
         self._home_y = {}
         self._zoomed = False
+        self._panned = False
         self._first_frame = True
         self._custom_content = None
         self._width, self._height = self.get_width_height()
@@ -658,19 +660,40 @@ class FigureCanvasH5Canvas(FigureCanvasBase):
             self.figure.axes[i].set_xlim(self._home_x[i][0], self._home_x[i][1])
             self.figure.axes[i].set_ylim(self._home_y[i][0], self._home_y[i][1])
         self._zoomed = False
+        self._panned = False
+        self.draw()
+
+    def calculate_transform(self, ax, x0, y0, x1, y1):
+         # convert pixel coordinates into data coordinates
+        inverse = self.figure.axes[int(ax)].transData.inverted()
+        lastx, lasty = inverse.transform_point((float(x0), float(y0)))
+        x, y = inverse.transform_point((float(x1), float(y1)))
+        return (lastx, lasty, x, y)
+
+    def preserve_home(self, ax):
+        ax = int(ax)
+        if not (self._zoomed or self._panned):
+            self._home_x[ax] = self.figure.axes[ax].get_xlim()
+            self._home_y[ax] = self.figure.axes[ax].get_ylim()
+ 
+    def handle_pan(self, ax, x0, y0, x1, y1):
+        ax = int(ax)
+        self.preserve_home(ax)
+        self._panned = True
+        (lastx, lasty, x, y) = self.calculate_transform(ax, x0, y0, x1, y1)
+        xdiff = lastx - x
+        ydiff = y - lasty
+        (x0,x1) = self.figure.axes[ax].get_xlim()
+        (y0,y1) = self.figure.axes[ax].get_ylim()
+        self.figure.axes[ax].set_xlim((x0+xdiff, x1+xdiff))
+        self.figure.axes[ax].set_ylim((y0+ydiff, y1+ydiff))
         self.draw()
 
     def handle_zoom(self, ax, x0, y0, x1, y1):
-         # these coordinates should be the bottom left and top right of the zoom bounding box
-         # in figure pixels..
         ax = int(ax)
-        if not self._zoomed:
-            self._home_x[ax] = self.figure.axes[ax].get_xlim()
-            self._home_y[ax] = self.figure.axes[ax].get_ylim()
+        self.preserve_home(ax)
         self._zoomed = True
-        inverse = self.figure.axes[ax].transData.inverted()
-        lastx, lasty = inverse.transform_point((float(x0), float(y0)))
-        x, y = inverse.transform_point((float(x1), float(y1)))
+        (lastx, lasty, x, y) = self.calculate_transform(ax, x0, y0, x1, y1)
         x0, y0, x1, y1 = self.figure.axes[ax].viewLim.frozen().extents
 
         Xmin,Xmax=self.figure.axes[ax].get_xlim()

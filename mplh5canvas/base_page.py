@@ -87,6 +87,9 @@ base_html = """
 <img style='display: none;' id="button_resize_over" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAEAwAABAMBtJq7BgAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAOaSURBVDiNfZRLbBtVGIW/uTO2JxkTv52keTZOSBy1oRIVqEARgoqHuinqAlGhdIO6RIJFxQY2iAWLIlWwAAmxABGxqITEgk15BKEQqZQCah4iIS11EqdxjV8Zj+15eFhU2HFs8Utnc6X/3POfe/8jPXzhY5cD5dYdiqklKvktjOI2lUwKAH/vKFp4ADU4iH9gGknIB1tRDh5UcmlSi3OEp2YYeuYUocljBMeSABRurVLaWKKwdI3ijTl6ki8gtGhLv9RQ6LrsLn1HYfM3HnvzMvGZE22376+99T/YmruECI5Rj0wDUivh7s2ryGqdJy5eRvap/0vWsMYy2f36I8ySxV7XYQDEf2MWU79z8o33eXa0hzPDKo9GFIZV8NYdJLsz/qm6bB6fRZOK+Fzjvodu3SG18AVPvv4eHqEQ8QhOJ/xNFS5kKw47ZYsd3ebHzTLzKYPbRRPdrANgTLzI4+mrrDkJlGJqiWhimr6p4+A47JRqQJNQkiDWLRPrltFrZT79JUPFdpvjAXlPL3pgkJheRVRymwwePdEY426h2tGvxZTO2c/XqBkmwrSIKy7CtBq45xsg1O0iqrktYqNJhO0gbIfdQhW37WfCTF8XcY+LbFo8N6rxyZlRZNNqoOD2EH/AgyhnU0T7xxC2jbBtrKpFvmK1EWpemZ9fe4jzxyJ8dm6So33dLQrzNR/9AS9CckGynBbcztx/sZ/W81RMp4X00tkJvLJEWPMQUUDUrAZUnw+hxYbIp9YaHmZzBjduFZhfyTL74XWeemehhXR/TYZ9DYX9coU9x4vQoiMUN/9E2A6GXuP6aoavFlK8+sE17HKN9E6Jt+eWOxI+GFUbHo5oDjkDRFd0mOzfNxGOzcadPPWKyfJ6FqtcQ5gWT0+FefeVIx0JJ+JdDYXJGGR0B6EdSqLn0uTurJJOF1uMjvgEF55PYFTtjoSJPj/CtBgPOIzFvazdNVAkIaMdOc1fi18iQi8hSc0AKtUszr/1LQCRgMr4UIDxwR7GhwIkBgP0qAqqbTN7MsyVXzM4dbcZDkp2GdmokhWP4NKec53Ko0i8fCpEybX5fjkLNLcHOzqNJxwk6V8kKOVaRu+ERFTi4rk4Jdfhh5Vs45J9ASuh+xPYbj/J0DaWpVPUNUqGl4IuIwHRkOBQr5eJw36GR/xcuXGPnQOr2pbYVambFXecmFYlGnGZ1qAvqKCqPkqWh1xNYkO3+GZ+G6fevqP/AuWCyZZYcPwAAAAAAElFTkSuQmCC" />
 <img style='display: none;' id="button_home" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAEAwAABAMBtJq7BgAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAANvSURBVDiNjZVdTJtVGMd/79tauvLZFoaAfJQP040CUmYmA0TishCTGXXJIjEmxk2vjd5suzC7WmI0eqdRkwW3C40X6p2JJBKJjBgWt0ExE6G23cqg3Whrx1ffc87rRUs3GApP8r865/zO85Xn0bre/txkm1ktOj2+Op5uLsfvcfNElRsNiMYSTIcTTPy5xNhUGCHV9qdo24FN1S4+eauPkrUlrLEgcnkBmVwCwFJWicVVjahs5r6jkne+GGMuem9noK5pnB5sZ6i3ESZ/QCyFHrqlgZn9V7PaQNexuGvQDr3I17/O8+WPU6jcuaW66/h5gNOD7bzaaifz8yXkP8uYZpZhahaKn38NbPsw4lGKBoYo7D2BWk2zNvYNHZ1tOFwVTM4uAqBvhjnU28j6+HdII4NUKisTivpPYqv1UtR9HFtzJ2bOE6UU63dCLF88y0v+KpqqXVmg1aLz0aleMhPfIzIGQpKTRnHfCewe32bclPS9gmYvBGB9MUx69gZrsQXSl9/ngzeOYLXoWHt8dThSUVaiwS3JdT37Mo4n/dtKqGPbX5v1UEgMka1y6o+rlEcD9Pjq0DvqnajFIFKSV+nhFyhqfeaRltiEAljd1RjCzCszc4WOeie63+NiPbaQz1tJ1wCl/v6dYQ9Zqf857C2dGFJhSEV6foaO+jL0hpoKVuN3EBKKfUdwdw/uCgPQC+x4z3yGvaEVQ5ik/p7FU1ORrbKUJtI0WY0vEPr2U+Tayq5AUwqunz/Fxv0VDKEQuXzqwdtxHnM9jhQm6XCQ+O8TyI313YFKcTdwjWRoDkOYFNS0ELwdR78WWsZWUYVUio3VFWLTk/le280282dIhaPxADciSfSpcAJLZQNCQTI0T2ZD7AkGbKlyYXsvU+EE+nggguGuw1FVTyoawRCKvfkHhlAYQlF2sAvd0854IIIupOLMV1eoPHYSoXQMYbJXoiFMlKWAg+99yNlLEwipHkybN4/5GChOcPXCu+hWK1qugf/bTKRhcOjcx4ymnVz8KQDkhgPA8MgMo2knR4dHKGk8wEoy9b8q9ng5OjzCaNrJ8MhM/psdB+yF17tZ++s6d3/7hfjNAPfmbgLgbvZS4fVRfriffS1Pce7yBPMLy1v8fgQID1ZAW52TttpSmmr3AzB/K8b0rRTTkQTjgciOK+Bfa+a4GLtdYmQAAAAASUVORK5CYII=" />
 <img style='display: none;' id="button_home_over" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAEAwAABAMBtJq7BgAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAANtSURBVDiNjZXdT9tVGMc/59fS/aAvvJettALDAnMYFTTbVGTTGHWJibpsiTOaqIm36oWJd+4/WPRiaqL/gGYX3umlGDSZOnWQiGy8tJXCaPtrKRRafufFi0IHjAhP8tycPOdzvs9znvMcMfzel4Y9ZrSimJyEwjw6N4uTSSOAcKSLhsgAMhjDF46DsPZuxbt3YcNJ44x/zemuFp4djPFo91OciLYD8M+iw99phxupW0xN3aTc8xLabtq1X9QUGkNh8gfk3DjX3n6BM32xHVECTDVMeH1gWUymlvl0fI6V0ACOPw4IADyR4ZevADgT3zNoZrj+wUW62psxpsowwkPwuTfAV4+bWSBw7nX8T1+gPRTgrL9IvpijpARFQvdS3nDSqLmf+eyTt6jzWiitt5RZNI5ewhcbwBfrR7ubmC2lWmt0Ls3FugWWK4Kcp411fQTLaEX2p6+4+ubzeC0vUrHlguDIBeyewe28CY28hrD9AJSXEqxO/4UqZHnF3OZUcBFLgHclOclwJMTjxzvvKQNannmVhr6h3TcmLHzham21VLiyGt8q8/RSYNovsdzMDCP9UZSi5o2nzhM4efq+ltiGAnhbI7jS1DxaXiIaAEvnZnkodhSlNUprQsPnaBwa3R+2wxqHzmLHH8NVGldp/CWHniaBVXQWOR5uQyoIDj5J65kXD4QBWEdsBj7+HLv7JK40eIo5jrUGsIyhqs4Y1jNp5r+5htooHQg0SvLnlXeprJVwpUZKjW3bWC3hGHeWCihpWE3Mkrn5C6pSPhioNdnJPyjM38GVhs1QB6sVsHxH+7i97KC0prJeYnni11qvHWTb9XOVho4HSK15sHzhXm6lHaSGwvwMmxV5KBiw65bFg8MkVhSWHY4zV/YwfTfPykISV2oOpw9cqXGlxhONY7oeZiJRwEJYqPh5vp1eZr0scaXhsERXGqSoo+nyh3wxtoDSpvqWjd1MsfkEN+oMQ9kprl8aRewz63abQVpejl1+n7Gk5N9stTNq87AY7GOuvgETjtI//zv1hez/4vy9A/S88xFjSZfvfluore8YsIK73hhrVgf1Qx20ljIEMyk8+Qwmn0EAvo5OGmI9NAw+gS/+CFd/TJPKru06SOz3BVgCIgFNp9/Q3SiItAWx622KG4ZUyUNyRTGRyKP0/cX+DwdjpAeUBIzPAAAAAElFTkSuQmCC" />
+<img style='display: none;' id="button_pan" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAEAwAABAMBtJq7BgAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAPLSURBVDiNfZVdbFRFGIafmfO7p2Xtj+y2lP7xY5u2glEhhhBBYqQixVCjlya900QTSOCKGEkM8UYTEky84M54aUgshGjSgBjEGAmxtJC2CC1LS9vddlv25+zuObtnvICulq58yXs388w733x5R1ChlFIG8E7Ozb7h+/5ey7I3A/heYUo3zGt2KPQTcF4I4T+9V1SA9bjZ7OBMLBaN3b0bis/NicV4HID6SIRIQ4Nq27Il19TSsmg7zkEhxM2KQKWUzOdyn3sF78jQ4IXww9iDSubLtaGlmTff7UubpnHaDoVOCiGCVUA3656cmYodv3ThZ6foFwHo3NbN9FSMTCpdEaobOvsO9rob21tOh5zQCQC5ck2v4B29fOGSExQFUhjous2+vv109HQjhbFGBBrx6QW+PXXGcTPZj5RSPQBSKWW4GffHX85fDquSRAoTKUyE0h/3RGi8/X4fL722AylMchmf+xMz/PX7KJNj0ywnspz98mydm3HPKaUMCRyYvT8bTTxMrnIgeAJEoz7yPM/V1BBpaOT13r0sxzMYMoQubHRhc+9WjPHhiQhwQObd/O65WMJZcabrdtnl49eSlIoBj5IZGpobae9s5/BAPwPHBtBkqKzb1yfCeTe/W/e90r6lRFpIYWA7Fh98fIjRP8e48esIKlBYlo1u6LRubX7SAkF1OEzVumo0YZcfaOZuQniF4h5p2eYLjxZcpDDxcopsOkf3jk48VxEEAdt2dVEVdmhsjdLYGqV2fQ279r+KEHKVw/lYCss2OySAFAYaj3Vv5AGaJvnw+GE0XfvfORRo5R6uCED6heJE3fp6pDSR0mTk2hRBoLCrrGcOtu8Fqxw2tTfhF4rjUjf0S3XRGiUx8fOCsT8e8tvg6DNhAJMj82jCLqt58wZlmMYVaTnG1fUbarNSGizN5hHYDH0/yuTo/DOBd24kVjnseKU1ZTnGVQlcjLbVztU31JJOlNCFjVQWP3x9ndRiriJsYTpNOl4s925T10Y2vdgQBy5KIYQfqjIO7+zdtKxr/55YyEiGvhuvCPz7xkJ5nWVX897RnUm7yugXQvjlcCi4xc8mh5PHBr+5HS56AQBSE7z8VhMASoFSChRMDidZms+hm5JDn3Sl2rfXfWU5+hfwVHx5udKJgls6cv7MnbrpscoJs1IbO9fR9+nWpOVop82QdmpNfP0H3FPIls7FbmUiU8Op8PykKxYf5AGob7aJtjuqbXs41dJdHbeqtH4hxKqRWAN8AjWAA14u2F30gj2GJTsA/EIwrpvyihmSV4GLlb6AfwCPPIOQNBOBtgAAAABJRU5ErkJggg==" />
+<img style='display: none;' id="button_pan_over" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAEAwAABAMBtJq7BgAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAPVSURBVDiNfZVNTFxVFMf/9777Pu59D2bKDAMzzhSZwcGREmz7wBgiVWO0qWMbN8avEnVR6YIaTOzCFTtduNTFGBcmBtO4oCsILogL40LMtEqjRGwpHYEB5iNQeDPM53MxYaR8neQk772c+7v/c97N/xIcHjKAC4LzfllmLxYKxTClRHI6nAmX2zVTrlQnhBA34/F4af9CcgjslKooP4RDoZaucNjp9/mo1+MBAKxnMlhPp5FMp0ub29sbXp8vOj4+PnMUkBJCrjfoxscfvPGWM9TeLh+hHgCwlknj9/m5gi70byKnuq6Njo5WAYDtqfkk0hEevvL2+82yXGP5TvoBACuJpQNAr9uHlqZWdS5x92pmLWUAeA8A6G6bhtCHh9694lMVAUpkUCKjb6Affef66+/703q4AzXHaD6/8+bw0PCZXYUyk9jY0DtXnaqsH1BCQNFtnkHbE22YvDGBYqGI1GoaqeQ6CvkCAEASkspDfCIWi52kAC4EAyGjMxjR9yuATQAQuDwuuDwu2BWKS5dfh5XNg0EFIxoY0UDyMmiRtWZWMoMUgNkd7tEoUUCJAsY07D4DBIQQ7ORKKJcq4KIBgZAf5sAz+HzsM0iU19POUShMO88ISG8k1N1MSe1HXBx8BZVyBZNj06hWAFlh0A0Dqqbg7HOnAQCGwwFhcEhEq4+mkmMQDfppRiXpbHsgLO8Cs2ub6Ohugz8YwPZmHv6QF80+FwCgq7cTABC9/FJtdpTXgWWLwHGi8TEG27YpZEioAe/+8S86utswEO2FxCiOC7ZHISEEnHNQiUm3lpLLJUoVUKpgLfEQycUMZJWBSkcDS8XyIzNsdDVCgrpEhRAziysLKQoFFAoSf2Ux9e1vsG37WHULs0lIRKtnk9cJBvU2FULE7yfnc5TK2N4oo5ijWJjNYvr72WOB87dWH1HYGmyCrutT1Ov1Tmatla3E8qK1lSrXz9YvN+/h75nkkcB7tzL12uaAA/6wK2m0SN/ReDxeEjofnL5zI1uw7P93JRyTX8+hWjnYeiqxhe1MrVZWBMxLvh2D86hpmqW620Sj0eut4skPH7dfDtI9nhF51gPdqcC2Adg2bBtIL1tI/LkByoCeVxsr7oD+Ve+5yEfAHrcxTfOLB/cfYJVPXWvNveCSC24NAOZ/3Tq05aaAwNMXhaVx/mVPX8enu98PGOzIyEiXoTvGjHKgWcn7PCTXyKpW7QCrzgp0TxXudmmnpUNbc7nFa8HO4J296w9zbMRiMblQKJzXVNHLlYbnuVCf4pqQVFn/Rwj+84kW/pNlWT+apnngCvgP+TAum4t9Kv4AAAAASUVORK5CYII=" />
+
 """
 
 base_html_decoration = """
@@ -151,8 +154,9 @@ base_html_canvii = """
  <table width="100%" border=0 cellspacing=0 cellpadding=0>
   <tr width="100%">
    <td width="24" style='padding-left: 2px; padding-right: 10px;'><img onclick='close_plot(0);' onmouseover='this.src=button_close_over.src' onmouseout='this.src=button_close.src' style='cursor: pointer;' id='cb' src=''/><script>document.getElementById('cb').src=document.getElementById('button_close').src</script>
-   <td width="65%" onmousedown="clickMove(event,0);" style="cursor: move;"><span id="status_0" style='color: white;'>Disconnected</span>
+   <td width="60%" onmousedown="clickMove(event,0);" style="cursor: move;"><span id="status_0" style='color: white;'>Disconnected</span>
    <td width="35%" onmousedown="clickMove(event,0);" style="cursor: move;"><span onclick='change_cursor_info(0);' id='cursor_info_0' style='color: white;'>Cursor</span>
+   <td width="24" style="text-align: right; padding-left: 5px;"><img onclick='pan_toggle(0);' ondragstart="return false;" style="cursor: pointer;" id="pb" src="" /><script>document.getElementById('pb').src = document.getElementById('button_pan').src</script>
    <td width="24" style="text-align: right; padding-left: 5px;"><img onclick='go_home(0);' ondragstart="return false;" onmouseover='this.src=button_home_over.src' onmouseout='this.src=button_home.src' onclick="maximise(0);" style="cursor: pointer;" id="hb" src="" /><script>document.getElementById('hb').src = document.getElementById('button_home').src</script>
    <td width="24" style="text-align: right; padding-left: 5px; padding-right: 5px;"><img ondragstart="return false;" onmouseover='this.src=button_max_over.src' onmouseout='this.src=button_max.src' onclick="maximise(0);" style="cursor: pointer;" id="mb" src="" /> <script>document.getElementById('mb').src = document.getElementById('button_max').src</script>
    <td width="24" style="text-align: right; padding-right: 5px;" onmousedown="clickSize(event,0);"><img border=0 onmouseover='this.src=button_resize_over.src' onmouseout='this.src=button_resize.src' ondragstart="return false;" style="cursor: se-resize;" id="rb" src="" /> <script>document.getElementById('rb').src = document.getElementById('button_resize').src</script>
@@ -425,6 +429,7 @@ base_html_canvii = """
     var rStartY = 0;
     var mStartX = 0;
     var mStartY = 0;
+    var pan_mode = false;
 
     var top_e = null;
     function wrapClickCanvas(e, ref) {
@@ -456,7 +461,7 @@ base_html_canvii = """
      //alert("Clicked canvas for id " + id + " and axes " + axes);
      if (!e) var e = window.event;
         // e.button: 0 is left, 1 is middle, 2 is right.
-     if ((e.button == 0) && (e.shiftKey == false)) {
+     if ((e.button == 0) && (e.shiftKey == false) && (pan_mode == false)) {
       top_e = e;
       if (id > -1) zoom_canvas_id = id;
       var cnv = document.getElementById('plot_canvas_' + id);
@@ -469,6 +474,8 @@ base_html_canvii = """
        // position the start of the zoom reticule
      }
      else {
+      if (id > -1) pan_canvas_id = id;
+      pdraw = axes;
       //zoomButtonDown = true;
      }
      startX = e.pageX;
@@ -548,6 +555,7 @@ base_html_canvii = """
      resize = -1;
      move = -1;
      zdraw = -1;
+     pdraw = -1;
       // make sure we kill everything on mouse up
     }
 
@@ -557,11 +565,18 @@ base_html_canvii = """
      canvii[id].width = canvii[id].width;
     }
 
+    function pan_toggle(id) {
+     pan_mode = !pan_mode;
+     if (!pan_mode) document.getElementById('pb').src = document.getElementById('button_pan').src;
+     else document.getElementById('pb').src = document.getElementById('button_pan_over').src;
+    }
+
     function go_home(id) {
      sockets[id].send("<home args=''>");
     }
 
     var zoom_canvas_id = 0;
+    var pan_canvas_id = 0;
 
     function onDragOver(e) {
      if (e.preventDefault) e.preventDefault();
@@ -583,7 +598,8 @@ base_html_canvii = """
      return false;
     }
 
-    function zoom_in(id, axes) {
+
+    function calc_coords(id, axes) {
      var atop = 0;
      var aleft = 0;
      if (document.getElementById("anchor_div") != null) {
@@ -593,8 +609,15 @@ base_html_canvii = """
      }
         
      var plc = document.getElementById("plot_canvas_" + id);
-     var zoom_coords = axes + "," + (startX - (plc.offsetLeft + aleft)) + "," + (canvii[id].height - (stopY - (plc.offsetTop + atop))) + "," + (stopX - (plc.offsetLeft + aleft)) + "," + (canvii[id].height - (startY - (plc.offsetTop + atop)));
-     sockets[id].send("<zoom args='" + zoom_coords + "'>");
+     return axes + "," + (startX - (plc.offsetLeft + aleft)) + "," + (canvii[id].height - (stopY - (plc.offsetTop + atop))) + "," + (stopX - (plc.offsetLeft + aleft)) + "," + (canvii[id].height - (startY - (plc.offsetTop + atop)));
+    } // calculate the coordinates of the bounding box given by the canvas and the axes
+
+    function do_pan(id, axes) {
+     sockets[id].send("<pan args='" + calc_coords(id,axes) + "'>");
+    }
+
+    function zoom_in(id, axes) {
+     sockets[id].send("<zoom args='" + calc_coords(id,axes) + "'>");
      startX=stopX=startY=stopY=0;
      zdiv[id].style.width="0px";
      zdiv[id].style.height="0px";
@@ -607,12 +630,16 @@ base_html_canvii = """
      stopX = e.pageX;
      stopY = e.pageY;
      if (zdraw > -1 && ((stopX-startX)>5) && ((stopY-startY)>5)) { zoom_in(zoom_canvas_id, zdraw);}
+     else if (zdraw == -1 && (Math.abs(stopX-startX)>5) || (Math.abs(stopY-startY)>5)) {
+      do_pan(pan_canvas_id, pdraw);
+     }
      else {
       // not in zdraw (or zoomed areas less than 5x5) so normal click
       handle_click(e,id);
       zdiv[id].style.display = "none";
      }
      zdraw = -1;
+     pdraw = -1;
      pause = false;
      return false;
     }
@@ -625,7 +652,7 @@ base_html_canvii = """
      }
      else {
      }
-     if (cursor_info[id] == 0) document.getElementById('cursor_info_' + id).innerText = "Cursor at: " + e.pageX + "," + e.pageY;
+     if (cursor_info[id] == 0) document.getElementById('cursor_info_' + id).innerText = "Cursor: " + e.pageX + "," + e.pageY;
      return false;
     }
     document.captureEvents(Event.MOUSEMOVE)
