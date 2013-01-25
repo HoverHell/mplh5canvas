@@ -31,7 +31,7 @@ if LOG_FILE:
     handler = logging.handlers.RotatingFileHandler(LOG_FILE, 'a')
 else:
     import sys
-    handler = logging.StreamHandler(stream=sys.stdout)
+    handler = logging.StreamHandler(sys.stdout)
 formatter = logging.Formatter('[%(asctime)s] [%(levelname)s] %(name)s: %(message)s')
 handler.setFormatter(formatter)
 logger.addHandler(handler)
