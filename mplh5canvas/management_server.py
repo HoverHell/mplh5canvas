@@ -39,6 +39,13 @@ try:
 except:
     netifaces = None
 
+
+def _head(self, code=200, ctype="text/html"):
+    self.send_response(code)
+    self.send_header("Content-type", ctype)
+    self.end_headers()
+
+
 class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     base_html = base_page.base_html
     base_html_decoration = base_page.base_html_decoration
@@ -60,6 +67,9 @@ class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
                 canvas = self.h5m._figures[port]
             req_layout = (req_layout == '' and "" or "set_layout(" + str(req_layout) + ");")
             bh = self.base_html + self.base_html_decoration + self.base_html_canvii
+            ## ...
+            _head(self)
+            ## ...
             self.wfile.write(bh.replace('<!--requested_layout-->',req_layout).replace('<!--server_ip-->',server_ip).replace('<!--server_port-->',self.server_port).replace('<!--canvas_top-->','105').replace('<!--canvas_left-->','10').replace('<!--canvas_position-->','absolute'))
         elif self.path.startswith("/figure"):
             try:
@@ -94,7 +104,8 @@ class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
                 if frame.startswith("c."): frame = "c_t_" + str(figure_count) + frame[1:]
                 thumbs += t.replace('<!--thumbnail_content-->',header + frame) + "\n"
                 figure_count += 1
-             # insert thumbnail code into base page 
+            # insert thumbnail code into base page 
+            _head(self)
             self.wfile.write(self.thumb_html.replace("<!--thumbnail_body-->",thumbs))
         else:
             self.wfile.write("Not found...")

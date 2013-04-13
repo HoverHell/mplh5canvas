@@ -611,13 +611,14 @@ class FigureCanvasH5Canvas(FigureCanvasBase):
             self.send_frame(self._header + self._frame_extra)
 
     def parse_web_cmd(self, s):
+        action = None
         try:
             action = s[1:s.find(" ")]
             args = s[s.find("args='")+6:-2].split(",")
             method = getattr(self, "handle_%s" % action)
             method(*args)
         except AttributeError:
-            logger.warning("Cannot find request method handle_%s" % action)
+            logger.warning("Cannot find request method handle_%s", action)
 
     def show_browser(self):
         self.draw()
@@ -644,8 +645,13 @@ class FigureCanvasH5Canvas(FigureCanvasBase):
          # currently we do not distinguish between press and release on the javascript side. So call both :)
 
     def handle_resize(self, width, height):
-        width_in = float(width) / self.figure.dpi
-        height_in = float(height) / self.figure.dpi
+        width, height = float(width), float(height)
+        if math.isnan(width) or math.isnan(height):  ## XXXX: more fixin needed
+            ## Some clientside horror happened? Skip it
+            print "E: NaN resize (%r, %r)" % (width, height)
+            return
+        width_in = width / self.figure.dpi
+        height_in = height / self.figure.dpi
         self.figure.set_size_inches(width_in, height_in)
         self.draw()
          # set the figure and force a redraw...
@@ -738,12 +744,15 @@ class FigureCanvasH5Canvas(FigureCanvasBase):
     def web_socket_transfer_data(self, request):
         self.register_request_handler(request)
         while True:
+            if request.client_terminated:
+                self.deregister_request_handler(request)
+                return
             try:
                 line = request.ws_stream.receive_message()
                 logger.debug("Received web cmd: %s" % line)
                 self.parse_web_cmd(line)
             except Exception, e:
-                logger.error("Caught exception (%s). Removing registered handler" % str(e))
+                logger.exception("Caught exception. Removing registered handler")
                 self.deregister_request_handler(request)
                 return
 
